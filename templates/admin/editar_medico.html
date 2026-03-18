@@ -13,23 +13,37 @@
   </nav>
 
   <div class="page-header">
-    <p class="subtitulo">✏️ Editar Médico</p>
-    <h1>Dr(a). {{ medico.nombre }} {{ medico.apellido }}</h1>
-    <p>Modifica los datos del perfil del médico. Las credenciales de acceso no se pueden cambiar aquí.</p>
+    <p class="subtitulo"><i class="fa-solid fa-pen"></i> Editar Médico</p>
+    <h1>Dr(a). {{ perfil.nombre }} {{ perfil.apellido }}</h1>
   </div>
 
   <div class="card">
-    <div class="card-title">👨‍⚕️ Datos del Médico</div>
+    <div class="card-title">
+      <i class="fa-solid fa-user-doctor"></i> Datos del Médico
+    </div>
 
     <form method="POST"
-          action="{{ url_for('admin.editar_medico', medico_id=medico.id) }}"
+          action="{{ url_for('admin.editar_medico', medico_id=perfil.id) }}"
           novalidate>
+
       <div class="form-grid">
 
-        <div class="form-group">
+        <div class="form-group full">
           <label class="form-label">Documento</label>
-          <input type="text" class="form-control"
-                 value="{{ medico.documento }}" disabled />
+          <input type="text" class="form-control" value="{{ perfil.documento }}" disabled />
+          <span class="form-hint">El documento no puede modificarse.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="nombre">Nombres <span>*</span></label>
+          <input type="text" id="nombre" name="nombre" class="form-control"
+                 value="{{ perfil.nombre }}" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="apellido">Apellidos <span>*</span></label>
+          <input type="text" id="apellido" name="apellido" class="form-control"
+                 value="{{ perfil.apellido }}" required />
         </div>
 
         <div class="form-group">
@@ -37,53 +51,29 @@
           <select id="especialidad" name="especialidad" class="form-control" required>
             {% for esp in especialidades %}
               <option value="{{ esp }}"
-                {% if medico.especialidad == esp %}selected{% endif %}>
-                {% if esp == 'General' %}🏥 General
-                {% elif esp == 'Odontología' %}🦷 Odontología
-                {% else %}👨‍⚕️ Especialista{% endif %}
+                {% if perfil.especialidad == esp %}selected{% endif %}>
+                {{ esp }}
               </option>
             {% endfor %}
           </select>
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="nombre">Nombres <span>*</span></label>
-          <input type="text" id="nombre" name="nombre"
-                 class="form-control"
-                 value="{{ medico.nombre }}"
-                 maxlength="80" data-capitalizar required />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="apellido">Apellidos <span>*</span></label>
-          <input type="text" id="apellido" name="apellido"
-                 class="form-control"
-                 value="{{ medico.apellido }}"
-                 maxlength="80" data-capitalizar required />
-        </div>
-
-        <div class="form-group">
           <label class="form-label" for="telefono">Teléfono <span>*</span></label>
-          <input type="tel" id="telefono" name="telefono"
-                 class="form-control"
-                 value="{{ medico.telefono }}"
-                 maxlength="20" data-solo-numeros required />
+          <input type="tel" id="telefono" name="telefono" class="form-control"
+                 value="{{ perfil.telefono }}" required />
         </div>
 
         <div class="form-group">
           <label class="form-label" for="correo">Correo <span>*</span></label>
-          <input type="email" id="correo" name="correo"
-                 class="form-control"
-                 value="{{ medico.correo }}"
-                 maxlength="100" required />
+          <input type="email" id="correo" name="correo" class="form-control"
+                 value="{{ perfil.correo }}" required />
         </div>
 
         <div class="form-group full">
           <label class="form-label" for="direccion_eps">Dirección EPS <span>*</span></label>
-          <input type="text" id="direccion_eps" name="direccion_eps"
-                 class="form-control"
-                 value="{{ medico.direccion_eps }}"
-                 maxlength="150" required />
+          <input type="text" id="direccion_eps" name="direccion_eps" class="form-control"
+                 value="{{ perfil.direccion_eps }}" maxlength="150" required />
         </div>
 
       </div>
@@ -92,14 +82,12 @@
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary btn-lg">
-          💾 Guardar Cambios
+          <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
         </button>
-        <a href="{{ url_for('admin.medicos') }}" class="btn btn-secondary">
-          Cancelar
-        </a>
+        <a href="{{ url_for('admin.medicos') }}" class="btn btn-secondary">Cancelar</a>
       </div>
+
     </form>
   </div>
-
 </div>
 {% endblock %}

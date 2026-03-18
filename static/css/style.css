@@ -46,7 +46,7 @@ body {
 
 /* ── Tipografía ─────────────────────────────────── */
 h1, h2, h3 {
-  font-family: sans-serif;
+  font-family: 'Playfair Display', serif;
   font-weight: 700;
   color: var(--azul-oscuro);
   line-height: 1.25;
@@ -76,7 +76,7 @@ a:hover { color: var(--azul-oscuro); }
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: sans-serif;
+  font-family: 'Playfair Display', serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--blanco) !important;
@@ -687,7 +687,7 @@ select.form-control { cursor: pointer; appearance: none;
 }
 
 .auth-titulo {
-  font-family: sans-serif;
+  font-family: 'Playfair Display', serif;
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -840,12 +840,18 @@ select.form-control { cursor: pointer; appearance: none;
 
 .dashboard-hero--paciente {
   background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-medio) 100%);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 .dashboard-hero--medico {
   background: linear-gradient(135deg, #0d3b2e 0%, var(--verde-exito) 100%);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 .dashboard-hero--admin {
   background: linear-gradient(135deg, #2c0a3e 0%, #6A1B9A 100%);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .dashboard-hero-inner {
@@ -869,7 +875,7 @@ select.form-control { cursor: pointer; appearance: none;
 }
 
 .dashboard-hero-titulo {
-  font-family: sans-serif;
+  font-family: 'Playfair Display', serif;
   font-size: clamp(1.3rem, 3vw, 1.8rem);
   font-weight: 700;
   color: var(--blanco);
@@ -968,7 +974,7 @@ select.form-control { cursor: pointer; appearance: none;
 .stat-card--rojo::before    { background: var(--rojo-error); }
 
 .stat-numero {
-  font-family: sans-serif;
+  font-family: 'Playfair Display', serif;
   font-size: 2.2rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -1065,11 +1071,10 @@ select.form-control { cursor: pointer; appearance: none;
 .cita-card-fecha {
   text-align: center;
   flex-shrink: 0;
-  display: contents;
 }
 
 .cita-dia {
-  font-family: sans-serif;
+  font-family: 'Playfair Display', serif;
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -1084,6 +1089,7 @@ select.form-control { cursor: pointer; appearance: none;
 
 .cita-card-info {
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: .2rem;
   min-width: 0;
@@ -1334,3 +1340,16 @@ select.form-control { cursor: pointer; appearance: none;
   .navbar-usuario     { display: none; }
   .navbar-movil-only  { display: list-item; }
 }
+
+
+/* ── FontAwesome: ajustes de tamaño en contenedores ── */
+.icono-grande i        { font-size: 3rem; color: var(--gris-300); }
+.paso-icono i          { font-size: 1.8rem; color: var(--azul-claro); }
+.dash-accion-icono i   { font-size: 1.2rem; }
+.brand-icon i          { font-size: 1rem; color: var(--blanco); }
+.dashboard-hero-avatar i { font-size: 1.8rem; color: rgba(255,255,255,.85); }
+.paciente-avatar i     { font-size: 1.5rem; color: rgba(255,255,255,.85); }
+.auth-logo i           { font-size: 2.2rem; color: var(--azul-claro); }
+.tipo-fila-icono i     { font-size: 1.4rem; color: var(--azul-medio); }
+.hql-icono i           { font-size: 1.1rem; }
+.navbar-usuario-rol i  { font-size: .9rem; color: rgba(255,255,255,.8); }

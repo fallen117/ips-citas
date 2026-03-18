@@ -5,19 +5,20 @@
 {% block content %}
 <div class="dashboard-wrapper">
 
-  <!-- Cabecera -->
   <div class="dashboard-hero dashboard-hero--medico">
     <div class="dashboard-hero-inner">
-      <div class="dashboard-hero-avatar">🩺</div>
+      <div class="dashboard-hero-avatar">
+        <i class="fa-solid fa-stethoscope"></i>
+      </div>
       <div>
         <p class="dashboard-hero-subtitulo">Panel del Médico</p>
         <h1 class="dashboard-hero-titulo">
           Dr(a). {{ perfil.nombre }} {{ perfil.apellido }}
         </h1>
         <div class="dashboard-hero-meta">
-          <span>🏥 {{ perfil.especialidad }}</span>
-          <span>📍 {{ perfil.direccion_eps }}</span>
-          <span>📧 {{ perfil.correo }}</span>
+          <span><i class="fa-solid fa-hospital"></i> {{ perfil.especialidad }}</span>
+          <span><i class="fa-solid fa-location-dot"></i> {{ perfil.direccion_eps }}</span>
+          <span><i class="fa-solid fa-envelope"></i> {{ perfil.correo }}</span>
         </div>
       </div>
     </div>
@@ -25,32 +26,30 @@
 
   <div class="dashboard-body">
 
-    <!-- Estadísticas -->
     <div class="stats-grid">
       <div class="stat-card">
         <span class="stat-numero">{{ stats.pendientes or 0 }}</span>
-        <span class="stat-label">🕐 Pendientes</span>
+        <span class="stat-label"><i class="fa-solid fa-clock"></i> Pendientes</span>
       </div>
       <div class="stat-card stat-card--verde">
         <span class="stat-numero">{{ stats.atendidas or 0 }}</span>
-        <span class="stat-label">✅ Atendidas</span>
+        <span class="stat-label"><i class="fa-solid fa-circle-check"></i> Atendidas</span>
       </div>
       <div class="stat-card stat-card--amarillo">
         <span class="stat-numero">{{ stats.hoy or 0 }}</span>
-        <span class="stat-label">📅 Citas Hoy</span>
+        <span class="stat-label"><i class="fa-solid fa-calendar-day"></i> Citas Hoy</span>
       </div>
       <div class="stat-card stat-card--azul">
         <span class="stat-numero">{{ stats.total_citas or 0 }}</span>
-        <span class="stat-label">📊 Total</span>
+        <span class="stat-label"><i class="fa-solid fa-chart-bar"></i> Total</span>
       </div>
     </div>
 
-    <!-- Citas de hoy -->
     <div class="dashboard-section">
       <div class="dashboard-section-header">
-        <h2>Citas de Hoy</h2>
+        <h3>Citas de Hoy</h3>
         <a href="{{ url_for('medico.mis_citas') }}" class="btn btn-secondary btn-sm">
-          Ver todas →
+          Ver todas
         </a>
       </div>
 
@@ -64,32 +63,35 @@
             </div>
             <div class="cita-card-info">
               <p class="cita-medico">{{ cita.paciente_nombre }}</p>
-              <p class="cita-tipo">{{ cita.tipo_cita }} · {{ cita.paciente_eps }}</p>
-              <p class="cita-dir">📱 {{ cita.paciente_telefono }}</p>
+              <p class="cita-tipo">{{ cita.tipo_cita }} &middot; {{ cita.paciente_eps }}</p>
+              <p class="cita-dir">
+                <i class="fa-solid fa-phone"></i> {{ cita.paciente_telefono }}
+              </p>
             </div>
             <div class="cita-card-acciones">
               <span class="badge {{ cita.estado | estado_clase }}">
                 {{ cita.estado | estado_icono }} {{ cita.estado }}
               </span>
               <a href="{{ url_for('medico.detalle_cita', cita_id=cita.cita_id) }}"
-                 class="btn btn-outline btn-sm">Ver detalle</a>
+                 class="btn btn-outline btn-sm">
+                <i class="fa-solid fa-eye"></i> Ver detalle
+              </a>
             </div>
           </div>
           {% endfor %}
         </div>
       {% else %}
         <div class="estado-vacio" style="padding:2rem;">
-          <div class="icono-grande">🎉</div>
+          <div class="icono-grande"><i class="fa-solid fa-calendar-check"></i></div>
           <h3>Sin citas programadas para hoy</h3>
         </div>
       {% endif %}
     </div>
 
-    <!-- Próximas citas -->
     {% if proximas %}
     <div class="dashboard-section">
       <div class="dashboard-section-header">
-        <h2>Próximas Citas</h2>
+        <h3>Próximas Citas</h3>
       </div>
       <div class="tabla-wrapper">
         <table class="tabla">
@@ -117,7 +119,9 @@
               </td>
               <td>
                 <a href="{{ url_for('medico.detalle_cita', cita_id=cita.cita_id) }}"
-                   class="btn btn-outline btn-sm">Ver</a>
+                   class="btn btn-outline btn-sm">
+                  <i class="fa-solid fa-eye"></i> Ver
+                </a>
               </td>
             </tr>
             {% endfor %}

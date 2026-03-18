@@ -5,9 +5,15 @@ from datetime import date, datetime
 TIPOS_CITA   = ["General", "Odontología", "Especialista"]
 ESTADOS_CITA = ["Pendiente", "Atendida", "Cancelada", "No asistió"]
 
+# Mapa especialidad del médico → tipos de cita permitidos
+ESPECIALIDAD_TIPOS = {
+    "General":      ["General"],
+    "Odontología":  ["Odontología"],
+    "Especialista": ["Especialista"],
+}
+
 
 class Cita:
-    """Modelo para gestión de citas médicas (v2 con roles)."""
 
     # ─────────────────────────────────────────
     #  VALIDACIONES
@@ -40,16 +46,64 @@ class Cita:
             errores.append("La dirección de la EPS es obligatoria.")
         return errores
 
+    @staticmethod
+    def validar_medico_tipo(medico_id: int, tipo_cita: str) -> list:
+        """
+        Verifica que el tipo de cita sea compatible con la especialidad del médico.
+        Retorna lista de errores; vacía si es válido.
+        """
+        conn = get_connection()
+        if not conn:
+            return []
+        cursor = None
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(
+                "SELECT especialidad FROM medicos WHERE id = %s AND activo = 1",
+                (medico_id,)
+            )
+            medico = cursor.fetchone()
+            if not medico:
+                return ["El médico seleccionado no está disponible."]
+
+            especialidad = medico["especialidad"]
+            tipos_permitidos = ESPECIALIDAD_TIPOS.get(especialidad, [])
+
+            if tipo_cita not in tipos_permitidos:
+                return [
+                    f"El tipo de cita '{tipo_cita}' no corresponde a la especialidad "
+                    f"'{especialidad}' del médico seleccionado. "
+                    f"Tipo permitido: {', '.join(tipos_permitidos)}."
+                ]
+            return []
+        except Error as e:
+            print(f"[ERROR] validar_medico_tipo: {e}")
+            return []
+        finally:
+            close_connection(conn, cursor)
+
     # ─────────────────────────────────────────
     #  CRUD
     # ─────────────────────────────────────────
 
     @staticmethod
     def reservar(paciente_id, medico_id, tipo_cita, fecha, hora, direccion_eps):
-        """Crea una nueva cita. paciente_id viene del perfil del paciente autenticado."""
+        """Crea una nueva cita para el paciente autenticado."""
+
+        # 1. Validaciones básicas de campos
         errores = Cita.validar_datos(medico_id, tipo_cita, fecha, hora, direccion_eps)
         if errores:
             return False, errores
+
+        # 2. Validar compatibilidad médico / tipo de cita
+        try:
+            medico_id_int = int(medico_id)
+        except (ValueError, TypeError):
+            return False, ["El médico seleccionado no es válido."]
+
+        errores_tipo = Cita.validar_medico_tipo(medico_id_int, tipo_cita)
+        if errores_tipo:
+            return False, errores_tipo
 
         conn = get_connection()
         if not conn:
@@ -58,11 +112,11 @@ class Cita:
         try:
             cursor = conn.cursor(dictionary=True)
 
-            # Verificar que el médico existe y está activo
+            # Verificar médico activo
             cursor.execute(
                 "SELECT m.id FROM medicos m JOIN usuarios u ON m.usuario_id = u.id "
                 "WHERE m.id = %s AND m.activo = 1 AND u.activo = 1",
-                (medico_id,)
+                (medico_id_int,)
             )
             if not cursor.fetchone():
                 return False, ["El médico seleccionado no está disponible."]
@@ -70,7 +124,7 @@ class Cita:
             cursor.execute("""
                 INSERT INTO citas (paciente_id, medico_id, tipo_cita, fecha, hora, direccion_eps)
                 VALUES (%s, %s, %s, %s, %s, %s)
-            """, (paciente_id, medico_id, tipo_cita, fecha, hora, direccion_eps.strip()))
+            """, (paciente_id, medico_id_int, tipo_cita, fecha, hora, direccion_eps.strip()))
             conn.commit()
             return True, "Cita médica reservada exitosamente."
         except Error as e:
@@ -81,7 +135,6 @@ class Cita:
 
     @staticmethod
     def obtener_por_paciente(paciente_id: int) -> list:
-        """Retorna todas las citas de un paciente con datos del médico."""
         conn = get_connection()
         if not conn:
             return []
@@ -114,7 +167,6 @@ class Cita:
 
     @staticmethod
     def obtener_por_id(cita_id: int):
-        """Retorna datos completos de una cita (join paciente + médico)."""
         conn = get_connection()
         if not conn:
             return None
@@ -144,13 +196,18 @@ class Cita:
 
     @staticmethod
     def actualizar(cita_id, paciente_id, medico_id, tipo_cita, fecha, hora, direccion_eps):
-        """
-        Actualiza una cita. Verifica que pertenece al paciente_id que la edita.
-        Solo se pueden editar citas en estado 'Pendiente'.
-        """
         errores = Cita.validar_datos(medico_id, tipo_cita, fecha, hora, direccion_eps)
         if errores:
             return False, errores
+
+        try:
+            medico_id_int = int(medico_id)
+        except (ValueError, TypeError):
+            return False, ["El médico seleccionado no es válido."]
+
+        errores_tipo = Cita.validar_medico_tipo(medico_id_int, tipo_cita)
+        if errores_tipo:
+            return False, errores_tipo
 
         conn = get_connection()
         if not conn:
@@ -162,7 +219,7 @@ class Cita:
                 UPDATE citas
                 SET medico_id=%s, tipo_cita=%s, fecha=%s, hora=%s, direccion_eps=%s
                 WHERE id=%s AND paciente_id=%s AND estado='Pendiente'
-            """, (medico_id, tipo_cita, fecha, hora, direccion_eps.strip(), cita_id, paciente_id))
+            """, (medico_id_int, tipo_cita, fecha, hora, direccion_eps.strip(), cita_id, paciente_id))
             conn.commit()
             if cursor.rowcount == 0:
                 return False, ["No se puede modificar esta cita. Solo citas pendientes pueden editarse."]
@@ -175,7 +232,6 @@ class Cita:
 
     @staticmethod
     def cancelar(cita_id: int, paciente_id: int):
-        """El paciente cancela su propia cita (solo si está Pendiente)."""
         conn = get_connection()
         if not conn:
             return False, "No se pudo conectar a la base de datos."
@@ -198,7 +254,6 @@ class Cita:
 
     @staticmethod
     def obtener_todas_admin() -> list:
-        """Vista completa para el administrador."""
         conn = get_connection()
         if not conn:
             return []

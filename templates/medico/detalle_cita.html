@@ -3,9 +3,8 @@
 
 {% block content %}
 <div class="main-container">
-
   <nav class="breadcrumb">
-    <a href="{{ url_for('medico.dashboard') }}">Inicio</a>
+    <a href="{{ url_for('medico.dashboard') }}">Dashboard</a>
     <span class="sep">›</span>
     <a href="{{ url_for('medico.mis_citas') }}">Mis Citas</a>
     <span class="sep">›</span>
@@ -13,83 +12,80 @@
   </nav>
 
   <!-- Info del paciente -->
-  <div class="paciente-card" style="margin-bottom:1.5rem;">
-    <div class="paciente-avatar">👤</div>
+  <div class="paciente-card">
+    <div class="paciente-avatar"><i class="fa-solid fa-user"></i></div>
     <div>
       <h2>{{ cita.paciente_nombre }}</h2>
       <div class="paciente-meta">
-        <span>🪪 {{ cita.paciente_documento }}</span>
-        <span>📱 {{ cita.paciente_telefono }}</span>
-        <span>🏥 {{ cita.paciente_eps }}</span>
+        <span><i class="fa-solid fa-id-card"></i> {{ cita.paciente_documento }}</span>
+        <span><i class="fa-solid fa-phone"></i> {{ cita.paciente_telefono }}</span>
+        <span><i class="fa-solid fa-hospital"></i> {{ cita.paciente_eps }}</span>
       </div>
     </div>
-    <div style="margin-left:auto;">
+  </div>
+
+  <!-- Datos de la cita -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-title">
+      <i class="fa-solid fa-calendar-days"></i> Información de la Cita
+    </div>
+
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;">
       <span class="badge {{ cita.estado | estado_clase }}" style="font-size:.9rem;padding:.4rem 1rem;">
         {{ cita.estado | estado_icono }} {{ cita.estado }}
       </span>
     </div>
-  </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
-
-    <!-- Datos de la cita -->
-    <div class="card">
-      <div class="card-title">📅 Información de la Cita</div>
-      <div class="detalle-lista">
-        <div class="detalle-item">
-          <span class="detalle-label">Fecha</span>
-          <span class="detalle-valor">{{ cita.fecha | fecha_formato }}</span>
-        </div>
-        <div class="detalle-item">
-          <span class="detalle-label">Hora</span>
-          <span class="detalle-valor">{{ cita.hora | hora_formato }}</span>
-        </div>
-        <div class="detalle-item">
-          <span class="detalle-label">Tipo</span>
-          <span class="detalle-valor">
-            <span class="badge
-              {% if cita.tipo_cita == 'General' %}badge-general
-              {% elif cita.tipo_cita == 'Odontología' %}badge-odontologia
-              {% else %}badge-especialista{% endif %}">
-              {{ cita.tipo_cita }}
-            </span>
-          </span>
-        </div>
-        <div class="detalle-item">
-          <span class="detalle-label">Dirección</span>
-          <span class="detalle-valor">📍 {{ cita.direccion_eps }}</span>
-        </div>
+    <div class="detalle-lista">
+      <div class="detalle-item">
+        <span class="detalle-label">Tipo de Cita</span>
+        <span class="detalle-valor">{{ cita.tipo_cita }}</span>
+      </div>
+      <div class="detalle-item">
+        <span class="detalle-label">Fecha</span>
+        <span class="detalle-valor">{{ cita.fecha | fecha_formato }}</span>
+      </div>
+      <div class="detalle-item">
+        <span class="detalle-label">Hora</span>
+        <span class="detalle-valor">{{ cita.hora | hora_formato }}</span>
+      </div>
+      <div class="detalle-item">
+        <span class="detalle-label">Dirección EPS</span>
+        <span class="detalle-valor">
+          <i class="fa-solid fa-location-dot"></i> {{ cita.direccion_eps }}
+        </span>
       </div>
     </div>
+  </div>
 
-    <!-- Cambiar estado -->
-    <div class="card">
-      <div class="card-title">🔄 Cambiar Estado</div>
-      <form method="POST"
-            action="{{ url_for('medico.cambiar_estado', cita_id=cita.id) }}">
-        <div class="form-group" style="margin-bottom:1rem;">
-          <label class="form-label" for="estado">Nuevo estado</label>
-          <select id="estado" name="estado" class="form-control">
+  <!-- Cambiar estado -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-title">
+      <i class="fa-solid fa-rotate"></i> Cambiar Estado
+    </div>
+    <form method="POST" action="{{ url_for('medico.cambiar_estado', cita_id=cita.id) }}">
+      <div style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap;">
+        <div class="form-group" style="min-width:200px;">
+          <label class="form-label">Nuevo Estado</label>
+          <select name="estado" class="form-control" required>
             {% for e in estados %}
-              <option value="{{ e }}" {% if cita.estado == e %}selected{% endif %}>
-                {{ e }}
-              </option>
+              <option value="{{ e }}" {% if cita.estado == e %}selected{% endif %}>{{ e }}</option>
             {% endfor %}
           </select>
         </div>
-        <button type="submit" class="btn btn-primary btn-block">
-          ✓ Actualizar Estado
+        <button type="submit" class="btn btn-primary" style="align-self:flex-end;">
+          <i class="fa-solid fa-check"></i> Actualizar Estado
         </button>
-      </form>
-    </div>
-
+      </div>
+    </form>
   </div>
 
   <!-- Notas clínicas -->
-  <div class="card" style="margin-top:1.25rem;">
-    <div class="card-title">📝 Notas Clínicas</div>
+  <div class="card">
+    <div class="card-title">
+      <i class="fa-solid fa-notes-medical"></i> Notas Clínicas
+    </div>
 
-    <!-- Notas existentes -->
     {% if notas %}
       <div class="notas-lista">
         {% for nota in notas %}
@@ -105,24 +101,20 @@
       <hr class="divider" />
     {% endif %}
 
-    <!-- Agregar nueva nota -->
-    <form method="POST"
-          action="{{ url_for('medico.agregar_nota', cita_id=cita.id) }}">
+    <form method="POST" action="{{ url_for('medico.agregar_nota', cita_id=cita.id) }}"
+          style="padding:0 1.5rem 1.5rem;">
       <div class="form-group">
-        <label class="form-label" for="nota">Agregar observación</label>
+        <label class="form-label" for="nota">Agregar Nota Clínica</label>
         <textarea id="nota" name="nota" class="form-control"
-                  rows="4" maxlength="2000"
-                  placeholder="Escribe aquí tus observaciones clínicas..."
-                  required></textarea>
+                  rows="4" placeholder="Escribe tu observación clínica aquí..."
+                  maxlength="2000" required
+                  style="resize:vertical;"></textarea>
         <span class="form-hint">Máximo 2000 caracteres.</span>
       </div>
-      <div class="form-actions" style="margin-top:1rem;">
-        <button type="submit" class="btn btn-success">
-          💾 Guardar Nota
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          <i class="fa-solid fa-floppy-disk"></i> Guardar Nota
         </button>
-        <a href="{{ url_for('medico.mis_citas') }}" class="btn btn-secondary">
-          ← Volver
-        </a>
       </div>
     </form>
   </div>

@@ -1,0 +1,139 @@
+# ════════════════════════════════════════════════
+#  EPS CITAS — .gitignore
+#  Archivos y carpetas excluidos del repositorio
+# ════════════════════════════════════════════════
+
+
+# ── Entorno virtual ───────────────────────────────
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+
+# ── Variables de entorno (¡NUNCA subir!) ──────────
+#    Contiene contraseñas y claves secretas
+.env
+
+#    .env.example SÍ se sube (sin datos reales)
+#    !.env.example  ← ya está desbloqueado por defecto
+
+
+# ── Cache de Python ───────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+
+# ── Distribución / empaquetado ────────────────────
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+
+
+# ── Testing y cobertura ───────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+
+
+# ── Logs ──────────────────────────────────────────
+*.log
+logs/
+log/
+
+
+# ── Bases de datos locales (SQLite si se usara) ───
+*.db
+*.sqlite
+*.sqlite3
+
+
+# ── Flask ─────────────────────────────────────────
+instance/
+.webassets-cache
+flask_session/
+
+
+# ── Archivos de sistema operativo ─────────────────
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+
+# ── Editores e IDEs ───────────────────────────────
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim / Neovim
+*.swp
+*.swo
+*.swn
+Session.vim
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+
+# ── Archivos temporales ───────────────────────────
+*.tmp
+*.temp
+*.bak
+*.orig
+tmp/
+temp/
+
+
+# ── Uploads del usuario (si se implementa) ────────
+#    Descomenta si agregas subida de archivos
+# static/uploads/
+
+
+# ── Secretos y certificados ───────────────────────
+*.pem
+*.key
+*.cert
+*.p12
+secrets/

@@ -1,77 +1,58 @@
 {% extends "base.html" %}
-
 {% block title %}Consultar Cita{% endblock %}
 
 {% block content %}
 <div class="main-container">
-
-  <!-- Breadcrumb -->
-  <nav class="breadcrumb" aria-label="Ruta de navegación">
+  <nav class="breadcrumb">
     <a href="{{ url_for('index') }}">Inicio</a>
     <span class="sep">›</span>
     <span>Consultar Cita</span>
   </nav>
 
-  <!-- Cabecera -->
   <div class="page-header">
-    <p class="subtitulo">🔍 Consulta de Citas</p>
+    <p class="subtitulo"><i class="fa-solid fa-magnifying-glass"></i> Consulta de Citas</p>
     <h1>Consultar Cita Médica</h1>
     <p>Ingresa tu número de documento para ver el detalle de tus citas programadas.</p>
   </div>
 
-  <!-- Formulario de búsqueda -->
   <div class="card">
     <div class="card-title">
-      📄 Buscar por Documento
+      <i class="fa-solid fa-file-lines"></i> Buscar por Documento
     </div>
-
     <form method="POST" action="{{ url_for('paciente.mis_citas') }}" novalidate>
       <div class="form-group" style="margin-bottom:1.25rem;">
         <label class="form-label" for="documento">
           N° de Documento <span style="color:var(--rojo-error)">*</span>
         </label>
-        <input
-          type="text"
-          id="documento"
-          name="documento"
-          class="form-control"
-          placeholder="Ingresa tu número de documento"
-          maxlength="15"
-          data-solo-numeros
-          autocomplete="off"
-          required
-          style="font-size:1.05rem;padding:.75rem 1rem;"
-        />
-        <span class="form-hint">Solo números, sin puntos ni guiones.</span>
+        <input type="text" id="documento" name="documento" class="form-control"
+               placeholder="Ingresa tu número de documento"
+               maxlength="15" autocomplete="off" required
+               style="font-size:1.05rem;padding:.75rem 1rem;" />
       </div>
-
       <div class="form-actions">
         <button type="submit" class="btn btn-primary btn-lg">
-          🔍 Buscar Citas
+          <i class="fa-solid fa-magnifying-glass"></i> Buscar Citas
         </button>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary">
-          Volver
-        </a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver</a>
       </div>
     </form>
   </div>
 
-  <!-- Info adicional -->
   <div style="margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-
     <div class="card" style="padding:1.25rem 1.5rem;background:var(--azul-suave);">
       <h3 style="font-size:.92rem;margin-bottom:.35rem;">¿No tienes citas?</h3>
-      <p style="font-size:.84rem;margin-bottom:.75rem;">Reserva tu primera cita médica en segundos.</p>
-      <a href="{{ url_for('paciente.reservar_cita') }}" class="btn btn-outline btn-sm">Reservar →</a>
+      <p style="font-size:.84rem;margin-bottom:.75rem;">Reserva tu primera cita médica.</p>
+      <a href="{{ url_for('paciente.reservar_cita') }}" class="btn btn-outline btn-sm">
+        <i class="fa-solid fa-calendar-plus"></i> Reservar
+      </a>
     </div>
-
     <div class="card" style="padding:1.25rem 1.5rem;background:#F0FAF4;">
       <h3 style="font-size:.92rem;margin-bottom:.35rem;">¿No estás registrado?</h3>
-      <p style="font-size:.84rem;margin-bottom:.75rem;">Primero debes registrarte como paciente.</p>
-      <a href="{{ url_for('auth.registro') }}" class="btn btn-outline btn-sm">Registrarme →</a>
+      <p style="font-size:.84rem;margin-bottom:.75rem;">Primero debes registrarte.</p>
+      <a href="{{ url_for('auth.registro') }}" class="btn btn-outline btn-sm">
+        <i class="fa-solid fa-user-plus"></i> Registrarme
+      </a>
     </div>
-
   </div>
-
 </div>
 {% endblock %}

@@ -1,26 +1,34 @@
 {% extends "base.html" %}
 {% block title %}{% if edicion %}Editar Cita{% else %}Reservar Cita{% endif %}{% endblock %}
+{% block alertas_clase %}alertas{% endblock %}
 
 {% block content %}
 <div class="main-container">
 
   <nav class="breadcrumb">
-    <a href="{{ url_for('paciente.dashboard') }}">Inicio</a>
+    <a href="{{ url_for('paciente.dashboard') }}">Dashboard</a>
     <span class="sep">›</span>
-    <a href="{{ url_for('paciente.mis_citas') }}">Mis Citas</a>
-    <span class="sep">›</span>
-    <span>{% if edicion %}Editar Cita{% else %}Reservar Cita{% endif %}</span>
+    {% if edicion %}
+      <a href="{{ url_for('paciente.mis_citas') }}">Mis Citas</a>
+      <span class="sep">›</span>
+      <span>Editar Cita</span>
+    {% else %}
+      <span>Reservar Cita</span>
+    {% endif %}
   </nav>
 
   <div class="page-header">
-    <p class="subtitulo">📅 {% if edicion %}Modificar{% else %}Nueva{% endif %} Cita</p>
+    <p class="subtitulo">
+      <i class="fa-solid fa-calendar-plus"></i>
+      {% if edicion %}Editar Cita{% else %}Nueva Cita{% endif %}
+    </p>
     <h1>{% if edicion %}Actualizar Cita Médica{% else %}Reservar Cita Médica{% endif %}</h1>
-    <p>{% if edicion %}Modifica los campos que deseas cambiar.
-       {% else %}Selecciona el médico, tipo, fecha y hora de tu cita.{% endif %}</p>
   </div>
 
   <div class="card">
-    <div class="card-title">🩺 Datos de la Cita</div>
+    <div class="card-title">
+      <i class="fa-solid fa-stethoscope"></i> Información de la Cita
+    </div>
 
     <form id="form-cita"
           method="POST"
@@ -29,32 +37,11 @@
 
       <div class="form-grid">
 
-        <!-- Tipo de cita -->
-        <div class="form-group">
-          <label class="form-label" for="tipo_cita">
-            Tipo de Cita <span>*</span>
-          </label>
-          <select id="tipo_cita" name="tipo_cita" class="form-control" required
-                  onchange="filtrarMedicos(this.value)">
-            <option value="">— Selecciona el tipo —</option>
-            {% for tipo in tipos_cita %}
-              <option value="{{ tipo }}"
-                {% if datos.get('tipo_cita') == tipo %}selected{% endif %}>
-                {% if tipo == 'General' %}🏥 General
-                {% elif tipo == 'Odontología' %}🦷 Odontología
-                {% else %}👨‍⚕️ Especialista{% endif %}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-
         <!-- Médico -->
-        <div class="form-group">
-          <label class="form-label" for="medico_id">
-            Médico <span>*</span>
-          </label>
+        <div class="form-group full">
+          <label class="form-label" for="medico_id">Médico <span>*</span></label>
           <select id="medico_id" name="medico_id" class="form-control" required>
-            <option value="">— Primero selecciona el tipo —</option>
+            <option value="">-- Selecciona un médico --</option>
             {% for m in medicos %}
               <option value="{{ m.id }}"
                       data-especialidad="{{ m.especialidad }}"
@@ -64,42 +51,58 @@
               </option>
             {% endfor %}
           </select>
+          <span class="form-hint" id="medico-hint" style="display:none;">
+            <i class="fa-solid fa-circle-info"></i>
+            Especialidad: <strong id="medico-especialidad"></strong>
+          </span>
+        </div>
+
+        <!-- Tipo de cita -->
+        <div class="form-group">
+          <label class="form-label" for="tipo_cita">Tipo de Cita <span>*</span></label>
+          <select id="tipo_cita" name="tipo_cita" class="form-control" required>
+            <option value="">-- Selecciona el tipo --</option>
+            {% for tipo in tipos_cita %}
+              <option value="{{ tipo }}"
+                {% if datos.get('tipo_cita') == tipo %}selected{% endif %}>
+                {{ tipo }}
+              </option>
+            {% endfor %}
+          </select>
+          <span class="form-hint" id="tipo-hint" style="display:none;color:var(--amarillo);">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span id="tipo-hint-texto"></span>
+          </span>
         </div>
 
         <!-- Fecha -->
         <div class="form-group">
-          <label class="form-label" for="fecha">
-            Fecha <span>*</span>
-          </label>
-          <input type="date" id="fecha" name="fecha"
-                 class="form-control"
-                 value="{{ datos.get('fecha', '') }}"
-                 required />
+          <label class="form-label" for="fecha">Fecha <span>*</span></label>
+          <input type="date" id="fecha" name="fecha" class="form-control"
+                 value="{{ datos.get('fecha','')|string|truncate(10,True,'') }}" required />
         </div>
 
         <!-- Hora -->
         <div class="form-group">
-          <label class="form-label" for="hora">
-            Hora <span>*</span>
-          </label>
-          <input type="time" id="hora" name="hora"
-                 class="form-control"
-                 value="{% if datos.get('hora') %}{{ datos.get('hora')|string|truncate(5,True,'') }}{% endif %}"
+          <label class="form-label" for="hora">Hora <span>*</span></label>
+          <input type="time" id="hora" name="hora" class="form-control"
+                 value="{{ datos.get('hora','')|string|truncate(5,True,'') }}"
                  min="07:00" max="18:00" required />
-          <span class="form-hint">Horario: 7:00 AM – 6:00 PM</span>
+          <span class="form-hint">Horario de atención: 7:00 AM – 6:00 PM</span>
         </div>
 
-        <!-- Dirección EPS (se autocompleta al elegir médico) -->
+        <!-- Dirección EPS — se autocompleta al elegir médico -->
         <div class="form-group full">
           <label class="form-label" for="direccion_eps">
-            Dirección de la EPS <span>*</span>
+            Dirección EPS <span>*</span>
+            <span style="font-weight:400;color:var(--gris-500);font-size:.78rem;margin-left:.4rem;">
+              (se completa automáticamente al elegir el médico)
+            </span>
           </label>
-          <input type="text" id="direccion_eps" name="direccion_eps"
-                 class="form-control"
-                 placeholder="Se completa al elegir el médico"
-                 value="{{ datos.get('direccion_eps', '') }}"
-                 maxlength="150" required />
-          <span class="form-hint">Puedes editarla si es necesario.</span>
+          <input type="text" id="direccion_eps" name="direccion_eps" class="form-control"
+                 placeholder="Se completará al seleccionar un médico"
+                 maxlength="150"
+                 value="{{ datos.get('direccion_eps','') }}" required />
         </div>
 
       </div>
@@ -108,56 +111,155 @@
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary btn-lg">
-          {% if edicion %}💾 Guardar Cambios{% else %}✓ Confirmar Reserva{% endif %}
+          {% if edicion %}
+            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+          {% else %}
+            <i class="fa-solid fa-check"></i> Confirmar Reserva
+          {% endif %}
         </button>
-        <a href="{{ url_for('paciente.mis_citas') }}" class="btn btn-secondary">
-          Cancelar
-        </a>
+        <a href="{{ url_for('paciente.mis_citas') }}" class="btn btn-secondary">Cancelar</a>
       </div>
 
     </form>
   </div>
-
 </div>
-{% endblock %}
 
 {% block scripts %}
 <script>
-  // Filtrar médicos según el tipo de cita seleccionado
-  function filtrarMedicos(tipo) {
-    const select  = document.getElementById("medico_id");
-    const options = select.querySelectorAll("option[data-especialidad]");
-    let   visible = 0;
+// ── Mapa especialidad → tipo permitido
+const ESPECIALIDAD_TIPO = {
+  "General":     "General",
+  "Odontología": "Odontología",
+  "Especialista":"Especialista"
+};
 
-    options.forEach(opt => {
-      const match = !tipo || opt.dataset.especialidad === tipo;
-      opt.style.display = match ? "" : "none";
-      if (match) visible++;
-    });
+const selectMedico    = document.getElementById("medico_id");
+const selectTipo      = document.getElementById("tipo_cita");
+const inputDireccion  = document.getElementById("direccion_eps");
+const medicoHint      = document.getElementById("medico-hint");
+const medicoEsp       = document.getElementById("medico-especialidad");
+const tipoHint        = document.getElementById("tipo-hint");
+const tipoHintTexto   = document.getElementById("tipo-hint-texto");
 
-    // Resetear selección si el médico actual no coincide
-    const selected = select.options[select.selectedIndex];
-    if (selected && selected.dataset.especialidad &&
-        selected.dataset.especialidad !== tipo) {
-      select.value = "";
-      document.getElementById("direccion_eps").value = "";
+// ── Al cambiar el médico: autocompletar dirección y mostrar especialidad
+selectMedico.addEventListener("change", function () {
+  const opt = this.options[this.selectedIndex];
+  const especialidad = opt.dataset.especialidad || "";
+  const direccion    = opt.dataset.direccion    || "";
+
+  if (especialidad) {
+    // Autocompletar dirección
+    inputDireccion.value = direccion;
+
+    // Mostrar chip de especialidad
+    medicoEsp.textContent = especialidad;
+    medicoHint.style.display = "block";
+
+    // Preseleccionar tipo de cita según especialidad
+    const tipoSugerido = ESPECIALIDAD_TIPO[especialidad];
+    if (tipoSugerido) {
+      for (let opt of selectTipo.options) {
+        if (opt.value === tipoSugerido) {
+          opt.selected = true;
+          break;
+        }
+      }
     }
+    validarCompatibilidad();
+  } else {
+    medicoHint.style.display = "none";
+    tipoHint.style.display   = "none";
+  }
+});
 
-    // Actualizar placeholder
-    select.options[0].text = visible > 0
-      ? "— Selecciona un médico —"
-      : "— Sin médicos disponibles para este tipo —";
+// ── Al cambiar el tipo: validar compatibilidad con el médico
+selectTipo.addEventListener("change", validarCompatibilidad);
+
+function validarCompatibilidad() {
+  const opt         = selectMedico.options[selectMedico.selectedIndex];
+  const especialidad = opt?.dataset.especialidad || "";
+  const tipoElegido  = selectTipo.value;
+
+  if (!especialidad || !tipoElegido) {
+    tipoHint.style.display = "none";
+    return true;
   }
 
-  // Autocompletar dirección al elegir médico
-  document.getElementById("medico_id")?.addEventListener("change", function () {
-    const opt = this.options[this.selectedIndex];
-    const dir = opt?.dataset?.direccion || "";
-    document.getElementById("direccion_eps").value = dir;
-  });
+  const tipoPermitido = ESPECIALIDAD_TIPO[especialidad];
+  if (tipoElegido !== tipoPermitido) {
+    tipoHintTexto.textContent =
+      `El tipo "${tipoElegido}" no corresponde a la especialidad "${especialidad}". ` +
+      `Tipo permitido: ${tipoPermitido}.`;
+    tipoHint.style.display = "block";
+    return false;
+  } else {
+    tipoHint.style.display = "none";
+    return true;
+  }
+}
 
-  // Al cargar: aplicar filtro si ya hay tipo seleccionado
-  const tipoInicial = document.getElementById("tipo_cita")?.value;
-  if (tipoInicial) filtrarMedicos(tipoInicial);
+// ── Validación final antes de enviar
+document.getElementById("form-cita").addEventListener("submit", function (e) {
+  const errores = [];
+
+  if (!selectMedico.value)
+    errores.push("Debes seleccionar un médico.");
+
+  if (!selectTipo.value)
+    errores.push("Debes seleccionar el tipo de cita.");
+
+  if (!validarCompatibilidad())
+    errores.push(tipoHintTexto.textContent);
+
+  const fecha = document.getElementById("fecha").value;
+  if (!fecha) {
+    errores.push("La fecha es obligatoria.");
+  } else {
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    if (new Date(fecha + "T00:00:00") < hoy)
+      errores.push("La fecha no puede ser en el pasado.");
+  }
+
+  const hora = document.getElementById("hora").value;
+  if (!hora) {
+    errores.push("La hora es obligatoria.");
+  } else {
+    const [h] = hora.split(":").map(Number);
+    if (h < 7 || h >= 18)
+      errores.push("La hora debe estar entre 7:00 AM y 6:00 PM.");
+  }
+
+  if (!inputDireccion.value.trim())
+    errores.push("La dirección de la EPS es obligatoria.");
+
+  if (errores.length > 0) {
+    e.preventDefault();
+    // Mostrar errores en las alertas del layout
+    let contenedor = document.querySelector(".alertas, .alertas-wide");
+    if (!contenedor) {
+      // Crear contenedor de alertas si no existe
+      contenedor = document.createElement("div");
+      contenedor.className = "alertas";
+      document.querySelector("main").prepend(contenedor);
+    }
+    // Limpiar errores anteriores del cliente
+    contenedor.querySelectorAll(".alerta-cliente").forEach(a => a.remove());
+    errores.forEach(msg => {
+      const div = document.createElement("div");
+      div.className = "alerta alerta-error alerta-cliente";
+      div.innerHTML = `<span><i class="fa-solid fa-circle-exclamation"></i></span> ${msg}`;
+      contenedor.appendChild(div);
+    });
+    // Scroll al primer error
+    contenedor.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+
+// ── Disparar change al cargar si ya hay un médico seleccionado (edición)
+if (selectMedico.value) {
+  selectMedico.dispatchEvent(new Event("change"));
+}
 </script>
+{% endblock %}
+
 {% endblock %}

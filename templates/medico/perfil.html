@@ -3,26 +3,24 @@
 
 {% block content %}
 <div class="main-container">
-
   <nav class="breadcrumb">
-    <a href="{{ url_for('medico.dashboard') }}">Inicio</a>
+    <a href="{{ url_for('medico.dashboard') }}">Dashboard</a>
     <span class="sep">›</span>
     <span>Mi Perfil</span>
   </nav>
 
   <div class="page-header">
-    <p class="subtitulo">🩺 Perfil Médico</p>
-    <h1>Mi Perfil</h1>
-    <p>Tu información fue configurada por el administrador. Contacta al administrador para realizar cambios.</p>
+    <p class="subtitulo"><i class="fa-solid fa-user-doctor"></i> Perfil Médico</p>
+    <h1>Dr(a). {{ perfil.nombre }} {{ perfil.apellido }}</h1>
+    <p>Los datos del perfil son gestionados por el administrador del sistema.</p>
   </div>
 
   <div class="card">
-    <div class="card-title">📋 Datos del Médico</div>
+    <div class="card-title">
+      <i class="fa-solid fa-clipboard-list"></i> Datos del Médico
+    </div>
+
     <div class="detalle-lista">
-      <div class="detalle-item">
-        <span class="detalle-label">Nombre</span>
-        <span class="detalle-valor">Dr(a). {{ perfil.nombre }} {{ perfil.apellido }}</span>
-      </div>
       <div class="detalle-item">
         <span class="detalle-label">Documento</span>
         <span class="detalle-valor">{{ perfil.documento }}</span>
@@ -46,12 +44,13 @@
         <span class="detalle-label">Correo</span>
         <span class="detalle-valor">{{ perfil.correo }}</span>
       </div>
-      <div class="detalle-item">
-        <span class="detalle-label">Sede EPS</span>
-        <span class="detalle-valor">📍 {{ perfil.direccion_eps }}</span>
+      <div class="detalle-item full" style="grid-column:1/-1;">
+        <span class="detalle-label">Dirección EPS</span>
+        <span class="detalle-valor">
+          <i class="fa-solid fa-location-dot"></i> {{ perfil.direccion_eps }}
+        </span>
       </div>
     </div>
   </div>
-
 </div>
 {% endblock %}

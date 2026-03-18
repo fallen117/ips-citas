@@ -1,23 +1,23 @@
 {% extends "base.html" %}
-{% block title %}Mi Panel{% endblock %}
+{% block title %}Mi Dashboard{% endblock %}
 {% block alertas_clase %}alertas-wide{% endblock %}
 
 {% block content %}
 <div class="dashboard-wrapper">
 
-  <!-- Cabecera bienvenida -->
   <div class="dashboard-hero dashboard-hero--paciente">
     <div class="dashboard-hero-inner">
-      <div class="dashboard-hero-avatar">👤</div>
+      <div class="dashboard-hero-avatar">
+        <i class="fa-solid fa-user"></i>
+      </div>
       <div>
         <p class="dashboard-hero-subtitulo">Panel del Paciente</p>
         <h1 class="dashboard-hero-titulo">
-          Hola, {{ perfil.nombre }} {{ perfil.apellido }}
+          {{ perfil.nombre }} {{ perfil.apellido }}
         </h1>
         <div class="dashboard-hero-meta">
-          <span>🪪 {{ perfil.documento }}</span>
-          <span>🏥 {{ perfil.eps }}</span>
-          <span>📱 {{ perfil.telefono }}</span>
+          <span><i class="fa-solid fa-hospital"></i> {{ perfil.eps }}</span>
+          <span><i class="fa-solid fa-phone"></i> {{ perfil.telefono }}</span>
         </div>
       </div>
     </div>
@@ -28,23 +28,23 @@
     <!-- Acciones rápidas -->
     <div class="dashboard-acciones">
       <a href="{{ url_for('paciente.reservar_cita') }}" class="dash-accion dash-accion--primary">
-        <span class="dash-accion-icono">📅</span>
+        <span class="dash-accion-icono"><i class="fa-solid fa-calendar-plus"></i></span>
         <div>
           <strong>Reservar Cita</strong>
-          <span>Agenda una nueva cita médica</span>
+          <span>Nueva cita médica</span>
         </div>
       </a>
       <a href="{{ url_for('paciente.mis_citas') }}" class="dash-accion">
-        <span class="dash-accion-icono">📋</span>
+        <span class="dash-accion-icono"><i class="fa-solid fa-calendar-check"></i></span>
         <div>
           <strong>Mis Citas</strong>
           <span>Ver historial completo</span>
         </div>
       </a>
       <a href="{{ url_for('paciente.perfil') }}" class="dash-accion">
-        <span class="dash-accion-icono">✏️</span>
+        <span class="dash-accion-icono"><i class="fa-solid fa-pen-to-square"></i></span>
         <div>
-          <strong>Mi Perfil</strong>
+          <strong>Editar Perfil</strong>
           <span>Actualizar mis datos</span>
         </div>
       </a>
@@ -53,60 +53,54 @@
     <!-- Próximas citas -->
     <div class="dashboard-section">
       <div class="dashboard-section-header">
-        <h2>Próximas Citas</h2>
+        <h3>Próximas Citas</h3>
         <a href="{{ url_for('paciente.reservar_cita') }}" class="btn btn-primary btn-sm">
-          + Nueva Cita
+          <i class="fa-solid fa-plus"></i> Nueva Cita
         </a>
       </div>
 
       {% if proximas %}
         <div class="citas-lista">
           {% for cita in proximas %}
-          <div class="cita-card-info">
-              <p class="cita-medico">{{ cita.medico_nombre }}</p>
-              <p class="cita-tipo">{{ cita.tipo_cita }}</p>
-              <p class="cita-dir">📍 {{ cita.direccion_eps }}</p>
-            </div>
           <div class="cita-card">
             <div class="cita-card-fecha">
               <span class="cita-dia">{{ cita.fecha | fecha_formato }}</span>
               <span class="cita-hora">{{ cita.hora | hora_formato }}</span>
             </div>
-            
+            <div class="cita-card-info">
+              <p class="cita-medico">{{ cita.medico_nombre }}</p>
+              <p class="cita-tipo">{{ cita.tipo_cita }}</p>
+              <p class="cita-dir"><i class="fa-solid fa-location-dot"></i> {{ cita.direccion_eps }}</p>
+            </div>
             <div class="cita-card-acciones">
               <span class="badge {{ cita.estado | estado_clase }}">
                 {{ cita.estado | estado_icono }} {{ cita.estado }}
               </span>
-              <a href="{{ url_for('paciente.editar_cita', cita_id=cita.cita_id) }}"
-                 class="btn btn-outline btn-sm">Editar</a>
-              <form method="POST"
-                    action="{{ url_for('paciente.cancelar_cita', cita_id=cita.cita_id) }}"
-                    style="display:inline;">
-                <button type="submit" class="btn btn-danger btn-sm btn-cancelar-cita">
-                  Cancelar
-                </button>
-              </form>
+              <!-- <a href="{{ url_for('paciente.editar_cita', cita_id=cita.cita_id) }}"
+                 class="btn btn-outline btn-sm">
+                <i class="fa-solid fa-pen"></i> Editar
+              </a> -->
             </div>
           </div>
           {% endfor %}
         </div>
       {% else %}
-        <div class="estado-vacio">
-          <div class="icono-grande">📭</div>
+        <div class="estado-vacio" style="padding:2rem;">
+          <div class="icono-grande"><i class="fa-solid fa-calendar-xmark"></i></div>
           <h3>Sin citas próximas</h3>
-          <p>No tienes citas pendientes. ¡Agenda una ahora!</p>
-          <a href="{{ url_for('paciente.reservar_cita') }}" class="btn btn-primary">
-            Reservar Cita
+          <p>No tienes citas pendientes.</p>
+          <a href="{{ url_for('paciente.reservar_cita') }}" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-calendar-plus"></i> Reservar ahora
           </a>
         </div>
       {% endif %}
     </div>
 
-    <!-- Historial reciente (últimas 3) -->
+    <!-- Historial reciente -->
     {% if historial %}
     <div class="dashboard-section">
       <div class="dashboard-section-header">
-        <h2>Historial Reciente</h2>
+        <h3>Historial Reciente</h3>
         <a href="{{ url_for('paciente.mis_citas') }}" class="btn btn-secondary btn-sm">
           Ver todo
         </a>

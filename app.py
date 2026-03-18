@@ -86,10 +86,10 @@ def estado_clase(estado):
 def estado_icono(estado):
     """Retorna el emoji/icono según el estado de la cita."""
     iconos = {
-        "Pendiente":  "🕐",
-        "Atendida":   "✅",
-        "Cancelada":  "❌",
-        "No asistió": "⚠️",
+        "Pendiente":  "",
+        "Atendida":   "",
+        "Cancelada":  "",
+        "No asistió": "",
     }
     return iconos.get(estado, "")
 

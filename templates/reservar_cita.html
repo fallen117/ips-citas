@@ -1,16 +1,13 @@
 {% extends "base.html" %}
-
 {% block title %}{% if edicion %}Actualizar Cita{% else %}Reservar Cita{% endif %}{% endblock %}
 
 {% block content %}
 <div class="main-container">
-
-  <!-- Breadcrumb -->
-  <nav class="breadcrumb" aria-label="Ruta de navegación">
+  <nav class="breadcrumb">
     <a href="{{ url_for('index') }}">Inicio</a>
     <span class="sep">›</span>
     {% if edicion %}
-      <a href="{{ url_for('paciente.mis_citas') }}">Consultar Cita</a>
+      <a href="{{ url_for('paciente.mis_citas') }}">Mis Citas</a>
       <span class="sep">›</span>
       <span>Actualizar Cita</span>
     {% else %}
@@ -18,22 +15,25 @@
     {% endif %}
   </nav>
 
-  <!-- Cabecera -->
   <div class="page-header">
-    <p class="subtitulo">📅 {% if edicion %}Modificar Cita{% else %}Nueva Cita{% endif %}</p>
+    <p class="subtitulo">
+      <i class="fa-solid fa-calendar-plus"></i>
+      {% if edicion %}Modificar Cita{% else %}Nueva Cita{% endif %}
+    </p>
     <h1>{% if edicion %}Actualizar Cita Médica{% else %}Reservar Cita Médica{% endif %}</h1>
     <p>
       {% if edicion %}
         Modifica los campos que deseas actualizar y confirma los cambios.
       {% else %}
-        Ingresa los datos del paciente y elige tu cita. El paciente debe estar previamente registrado.
+        Ingresa los datos y elige tu médico. El paciente debe estar previamente registrado.
       {% endif %}
     </p>
   </div>
 
   <div class="card">
     <div class="card-title">
-      🩺 {% if edicion %}Datos de la Cita (Edición){% else %}Información de la Cita{% endif %}
+      <i class="fa-solid fa-stethoscope"></i>
+      {% if edicion %}Datos de la Cita (Edición){% else %}Información de la Cita{% endif %}
     </div>
 
     <form id="form-cita"
@@ -43,130 +43,82 @@
 
       <div class="form-grid">
 
-        <!-- Documento (solo en nueva cita) -->
         {% if not edicion %}
         <div class="form-group full">
-          <label class="form-label" for="documento">
-            N° de Documento del Paciente <span>*</span>
-          </label>
-          <input
-            type="text"
-            id="documento"
-            name="documento"
-            class="form-control"
-            placeholder="Ej: 1012345678"
-            maxlength="15"
-            value="{{ datos.get('documento', '') }}"
-            data-solo-numeros
-            required
-          />
+          <label class="form-label" for="documento">N° de Documento del Paciente <span>*</span></label>
+          <input type="text" id="documento" name="documento" class="form-control"
+                 placeholder="Ej: 1012345678" maxlength="15"
+                 value="{{ datos.get('documento','') }}" data-solo-numeros required />
           <span class="form-hint">
-            El paciente debe estar registrado en el sistema.
-            <a href="{{ url_for('auth.registro') }}">Registrar paciente →</a>
+            El paciente debe estar registrado.
+            <a href="{{ url_for('auth.registro') }}">Registrar paciente</a>
           </span>
         </div>
         {% endif %}
 
-        <!-- Médico -->
         <div class="form-group full">
-          <label class="form-label" for="medico">
-            Médico Asignado <span>*</span>
-          </label>
-          <input
-            type="text"
-            id="medico"
-            name="medico"
-            class="form-control"
-            placeholder="Ej: Dr. Carlos Pérez"
-            maxlength="100"
-            value="{{ datos.get('medico', '') }}"
-            data-capitalizar
-            required
-          />
-        </div>
-
-        <!-- Tipo de cita -->
-        <div class="form-group">
-          <label class="form-label" for="tipo_cita">
-            Tipo de Cita <span>*</span>
-          </label>
-          <select id="tipo_cita" name="tipo_cita" class="form-control" required>
-            <option value="">— Selecciona el tipo —</option>
-            {% for tipo in tipos_cita %}
-              <option value="{{ tipo }}"
-                {% if datos.get('tipo_cita') == tipo %}selected{% endif %}>
-                {% if tipo == 'General' %}🏥 General
-                {% elif tipo == 'Odontología' %}🦷 Odontología
-                {% elif tipo == 'Especialista' %}👨‍⚕️ Especialista
-                {% else %}{{ tipo }}{% endif %}
+          <label class="form-label" for="medico_id">Médico Asignado <span>*</span></label>
+          <select id="medico_id" name="medico_id" class="form-control" required>
+            <option value="">-- Selecciona un médico --</option>
+            {% for m in medicos %}
+              <option value="{{ m.id }}"
+                {% if datos.get('medico_id')|string == m.id|string %}selected{% endif %}>
+                Dr(a). {{ m.nombre }} {{ m.apellido }} — {{ m.especialidad }}
               </option>
             {% endfor %}
           </select>
         </div>
 
-        <!-- Dirección EPS -->
         <div class="form-group">
-          <label class="form-label" for="direccion_eps">
-            Dirección de la EPS <span>*</span>
-          </label>
-          <input
-            type="text"
-            id="direccion_eps"
-            name="direccion_eps"
-            class="form-control"
-            placeholder="Ej: Calle 45 # 12-30, Bogotá"
-            maxlength="150"
-            value="{{ datos.get('direccion_eps', '') }}"
-            required
-          />
+          <label class="form-label" for="tipo_cita">Tipo de Cita <span>*</span></label>
+          <select id="tipo_cita" name="tipo_cita" class="form-control" required>
+            <option value="">-- Selecciona el tipo --</option>
+            {% for tipo in tipos_cita %}
+              <option value="{{ tipo }}"
+                {% if datos.get('tipo_cita') == tipo %}selected{% endif %}>
+                {% if tipo == 'General' %}General
+                {% elif tipo == 'Odontología' %}Odontología
+                {% else %}Especialista{% endif %}
+              </option>
+            {% endfor %}
+          </select>
         </div>
 
-        <!-- Fecha -->
         <div class="form-group">
-          <label class="form-label" for="fecha">
-            Fecha de la Cita <span>*</span>
-          </label>
-          <input
-            type="date"
-            id="fecha"
-            name="fecha"
-            class="form-control"
-            value="{% if datos.get('fecha') %}{{ datos.get('fecha') }}{% endif %}"
-            required
-          />
+          <label class="form-label" for="direccion_eps">Dirección de la EPS <span>*</span></label>
+          <input type="text" id="direccion_eps" name="direccion_eps" class="form-control"
+                 placeholder="Ej: Calle 45 # 12-30, Bogotá" maxlength="150"
+                 value="{{ datos.get('direccion_eps','') }}" required />
         </div>
 
-        <!-- Hora -->
         <div class="form-group">
-          <label class="form-label" for="hora">
-            Hora de la Cita <span>*</span>
-          </label>
-          <input
-            type="time"
-            id="hora"
-            name="hora"
-            class="form-control"
-            value="{% if datos.get('hora') %}{{ datos.get('hora')|string|truncate(5, True, '') }}{% endif %}"
-            min="07:00"
-            max="18:00"
-            required
-          />
+          <label class="form-label" for="fecha">Fecha de la Cita <span>*</span></label>
+          <input type="date" id="fecha" name="fecha" class="form-control"
+                 value="{{ datos.get('fecha','')|string|truncate(10,True,'') }}" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="hora">Hora de la Cita <span>*</span></label>
+          <input type="time" id="hora" name="hora" class="form-control"
+                 value="{{ datos.get('hora','')|string|truncate(5,True,'') }}"
+                 min="07:00" max="18:00" required />
           <span class="form-hint">Horario de atención: 7:00 AM – 6:00 PM</span>
         </div>
 
-      </div><!-- /form-grid -->
+      </div>
 
       <hr class="divider" />
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary btn-lg">
-          {% if edicion %}💾 Guardar Cambios{% else %}✓ Confirmar Reserva{% endif %}
+          {% if edicion %}
+            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+          {% else %}
+            <i class="fa-solid fa-check"></i> Confirmar Reserva
+          {% endif %}
         </button>
         {% if edicion %}
-          <a href="{{ url_for('paciente.mis_citas') }}"
-             class="btn btn-secondary">
-            Cancelar
-          </a>
+          <a href="{{ url_for('paciente.mis_citas') }}" class="btn btn-secondary">Cancelar</a>
         {% else %}
           <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
         {% endif %}
@@ -174,13 +126,5 @@
 
     </form>
   </div>
-
-  {% if not edicion %}
-  <p style="margin-top:1.25rem;font-size:.88rem;text-align:center;color:var(--gris-500);">
-    ¿Quieres ver tus citas?
-    <a href="{{ url_for('paciente.mis_citas') }}">Consultarlas aquí →</a>
-  </p>
-  {% endif %}
-
 </div>
 {% endblock %}

@@ -10,11 +10,11 @@
 -- ════════════════════════════════════════════════════════════════
 
 -- ── 1. Base de datos ─────────────────────────────────────────────
-CREATE DATABASE IF NOT EXISTS eps_citas
+CREATE DATABASE IF NOT EXISTS railway
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-USE eps_citas;
+USE railway;
 
 SET FOREIGN_KEY_CHECKS = 0;
 

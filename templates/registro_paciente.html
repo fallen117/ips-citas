@@ -1,65 +1,43 @@
 {% extends "base.html" %}
-
 {% block title %}Registrar Paciente{% endblock %}
 
 {% block content %}
 <div class="main-container">
-
-  <!-- Breadcrumb -->
-  <nav class="breadcrumb" aria-label="Ruta de navegación">
+  <nav class="breadcrumb">
     <a href="{{ url_for('index') }}">Inicio</a>
     <span class="sep">›</span>
     <span>Registrar Paciente</span>
   </nav>
 
-  <!-- Cabecera -->
   <div class="page-header">
-    <p class="subtitulo">👤 Módulo de Pacientes</p>
+    <p class="subtitulo"><i class="fa-solid fa-user"></i> Módulo de Pacientes</p>
     <h1>Registro de Paciente</h1>
     <p>Completa el formulario con tus datos personales para afiliarte al sistema de citas.</p>
   </div>
 
-  <!-- Formulario -->
   <div class="card">
     <div class="card-title">
-      📋 Información Personal
+      <i class="fa-solid fa-clipboard-list"></i> Información Personal
     </div>
 
     <form id="form-paciente" method="POST" action="{{ url_for('auth.registro') }}" novalidate>
-
       <div class="form-grid">
 
-        <!-- Documento -->
         <div class="form-group">
-          <label class="form-label" for="documento">
-            N° de Documento <span>*</span>
-          </label>
-          <input
-            type="text"
-            id="documento"
-            name="documento"
-            class="form-control"
-            placeholder="Ej: 1012345678"
-            maxlength="15"
-            value="{{ datos.get('documento', '') }}"
-            data-solo-numeros
-            required
-          />
+          <label class="form-label" for="documento">N° de Documento <span>*</span></label>
+          <input type="text" id="documento" name="documento" class="form-control"
+                 placeholder="Ej: 1012345678" maxlength="15"
+                 value="{{ datos.get('documento','') }}" data-solo-numeros required />
           <span class="form-hint">Solo números, sin puntos ni comas.</span>
         </div>
 
-        <!-- EPS -->
         <div class="form-group">
-          <label class="form-label" for="eps">
-            EPS Asignada <span>*</span>
-          </label>
+          <label class="form-label" for="eps">EPS Asignada <span>*</span></label>
           <select id="eps" name="eps" class="form-control" required>
-            <option value="">— Selecciona tu EPS —</option>
-            {% set lista_eps = [
-              "Sura EPS", "Nueva EPS", "Sanitas EPS", "Compensar EPS",
-              "Coomeva EPS", "Famisanar EPS", "Salud Total EPS",
-              "Aliansalud EPS", "Medimás EPS", "Coosalud EPS"
-            ] %}
+            <option value="">-- Selecciona tu EPS --</option>
+            {% set lista_eps = ["Sura EPS","Nueva EPS","Sanitas EPS","Compensar EPS",
+              "Coomeva EPS","Famisanar EPS","Salud Total EPS",
+              "Aliansalud EPS","Medimás EPS","Coosalud EPS"] %}
             {% for eps_item in lista_eps %}
               <option value="{{ eps_item }}"
                 {% if datos.get('eps') == eps_item %}selected{% endif %}>
@@ -69,98 +47,50 @@
           </select>
         </div>
 
-        <!-- Nombre -->
         <div class="form-group">
-          <label class="form-label" for="nombre">
-            Nombres <span>*</span>
-          </label>
-          <input
-            type="text"
-            id="nombre"
-            name="nombre"
-            class="form-control"
-            placeholder="Ej: María José"
-            maxlength="80"
-            value="{{ datos.get('nombre', '') }}"
-            data-capitalizar
-            required
-          />
+          <label class="form-label" for="nombre">Nombres <span>*</span></label>
+          <input type="text" id="nombre" name="nombre" class="form-control"
+                 placeholder="Ej: María José" maxlength="80"
+                 value="{{ datos.get('nombre','') }}" data-capitalizar required />
         </div>
 
-        <!-- Apellido -->
         <div class="form-group">
-          <label class="form-label" for="apellido">
-            Apellidos <span>*</span>
-          </label>
-          <input
-            type="text"
-            id="apellido"
-            name="apellido"
-            class="form-control"
-            placeholder="Ej: Rodríguez García"
-            maxlength="80"
-            value="{{ datos.get('apellido', '') }}"
-            data-capitalizar
-            required
-          />
+          <label class="form-label" for="apellido">Apellidos <span>*</span></label>
+          <input type="text" id="apellido" name="apellido" class="form-control"
+                 placeholder="Ej: Rodríguez García" maxlength="80"
+                 value="{{ datos.get('apellido','') }}" data-capitalizar required />
         </div>
 
-        <!-- Teléfono -->
         <div class="form-group">
-          <label class="form-label" for="telefono">
-            Teléfono <span>*</span>
-          </label>
-          <input
-            type="tel"
-            id="telefono"
-            name="telefono"
-            class="form-control"
-            placeholder="Ej: 3001234567"
-            maxlength="20"
-            value="{{ datos.get('telefono', '') }}"
-            data-solo-numeros
-            required
-          />
+          <label class="form-label" for="telefono">Teléfono <span>*</span></label>
+          <input type="tel" id="telefono" name="telefono" class="form-control"
+                 placeholder="Ej: 3001234567" maxlength="20"
+                 value="{{ datos.get('telefono','') }}" data-solo-numeros required />
         </div>
 
-        <!-- Correo -->
         <div class="form-group">
-          <label class="form-label" for="correo">
-            Correo Electrónico <span>*</span>
-          </label>
-          <input
-            type="email"
-            id="correo"
-            name="correo"
-            class="form-control"
-            placeholder="Ej: maria@correo.com"
-            maxlength="100"
-            value="{{ datos.get('correo', '') }}"
-            required
-          />
+          <label class="form-label" for="correo">Correo Electrónico <span>*</span></label>
+          <input type="email" id="correo" name="correo" class="form-control"
+                 placeholder="Ej: maria@correo.com" maxlength="100"
+                 value="{{ datos.get('correo','') }}" required />
         </div>
 
-      </div><!-- /form-grid -->
+      </div>
 
       <hr class="divider" />
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary btn-lg">
-          ✓ Registrar Paciente
+          <i class="fa-solid fa-check"></i> Registrar Paciente
         </button>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary">
-          Cancelar
-        </a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
       </div>
-
     </form>
-  </div><!-- /card -->
+  </div>
 
-  <!-- Enlace rápido -->
   <p style="margin-top:1.25rem;font-size:.88rem;text-align:center;color:var(--gris-500);">
     ¿Ya estás registrado?
-    <a href="{{ url_for('paciente.reservar_cita') }}">Reserva tu cita aquí →</a>
+    <a href="{{ url_for('paciente.reservar_cita') }}">Reserva tu cita aquí</a>
   </p>
-
 </div>
 {% endblock %}

@@ -66,17 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ── Validación del formulario reservar/editar cita ──
-  const formCita = document.getElementById("form-cita");
-  if (formCita) {
-    formCita.addEventListener("submit", (e) => {
-      const errores = validarFormularioCita();
-      if (errores.length > 0) {
-        e.preventDefault();
-        mostrarErroresCliente(errores);
-      }
-    });
-  }
+  // ── Validación de form-cita: gestionada en el template paciente/reservar_cita.html ──
 
   // ── Confirmación de cancelación de cita ───────
   document.querySelectorAll(".btn-cancelar-cita").forEach(btn => {

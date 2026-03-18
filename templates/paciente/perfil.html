@@ -3,33 +3,56 @@
 
 {% block content %}
 <div class="main-container">
-
   <nav class="breadcrumb">
-    <a href="{{ url_for('paciente.dashboard') }}">Inicio</a>
+    <a href="{{ url_for('paciente.dashboard') }}">Dashboard</a>
     <span class="sep">›</span>
     <span>Mi Perfil</span>
   </nav>
 
   <div class="page-header">
-    <p class="subtitulo">👤 Datos personales</p>
+    <p class="subtitulo"><i class="fa-solid fa-user"></i> Datos personales</p>
     <h1>Mi Perfil</h1>
-    <p>Mantén tu información actualizada para recibir notificaciones de tus citas.</p>
   </div>
 
   <div class="card">
-    <div class="card-title">📋 Información Personal</div>
+    <div class="card-title">
+      <i class="fa-solid fa-clipboard-list"></i> Información Personal
+    </div>
 
     <form method="POST" action="{{ url_for('paciente.perfil') }}" novalidate>
       <div class="form-grid">
 
-        <div class="form-group">
-          <label class="form-label">N° de Documento</label>
-          <input type="text" class="form-control"
-                 value="{{ perfil.documento }}" disabled />
+        <div class="form-group full">
+          <label class="form-label">Número de Documento</label>
+          <input type="text" class="form-control" value="{{ perfil.documento }}" disabled />
           <span class="form-hint">El documento no puede modificarse.</span>
         </div>
 
         <div class="form-group">
+          <label class="form-label" for="nombre">Nombres <span>*</span></label>
+          <input type="text" id="nombre" name="nombre" class="form-control"
+                 value="{{ perfil.nombre }}" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="apellido">Apellidos <span>*</span></label>
+          <input type="text" id="apellido" name="apellido" class="form-control"
+                 value="{{ perfil.apellido }}" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="telefono">Teléfono <span>*</span></label>
+          <input type="tel" id="telefono" name="telefono" class="form-control"
+                 value="{{ perfil.telefono }}" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="correo">Correo <span>*</span></label>
+          <input type="email" id="correo" name="correo" class="form-control"
+                 value="{{ perfil.correo }}" required />
+        </div>
+
+        <div class="form-group full">
           <label class="form-label" for="eps">EPS Asignada <span>*</span></label>
           <select id="eps" name="eps" class="form-control" required>
             {% for eps_item in lista_eps %}
@@ -41,48 +64,17 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="nombre">Nombres <span>*</span></label>
-          <input type="text" id="nombre" name="nombre" class="form-control"
-                 value="{{ perfil.nombre }}"
-                 maxlength="80" data-capitalizar required />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="apellido">Apellidos <span>*</span></label>
-          <input type="text" id="apellido" name="apellido" class="form-control"
-                 value="{{ perfil.apellido }}"
-                 maxlength="80" data-capitalizar required />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="telefono">Teléfono <span>*</span></label>
-          <input type="tel" id="telefono" name="telefono" class="form-control"
-                 value="{{ perfil.telefono }}"
-                 maxlength="20" data-solo-numeros required />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="correo">Correo electrónico <span>*</span></label>
-          <input type="email" id="correo" name="correo" class="form-control"
-                 value="{{ perfil.correo }}"
-                 maxlength="100" required />
-        </div>
-
       </div>
 
       <hr class="divider" />
 
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary">
-          💾 Guardar Cambios
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
         </button>
-        <a href="{{ url_for('paciente.dashboard') }}" class="btn btn-secondary">
-          Cancelar
-        </a>
+        <a href="{{ url_for('paciente.dashboard') }}" class="btn btn-secondary">Cancelar</a>
       </div>
     </form>
   </div>
-
 </div>
 {% endblock %}

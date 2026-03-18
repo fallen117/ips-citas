@@ -13,86 +13,74 @@
   </nav>
 
   <div class="page-header">
-    <p class="subtitulo">🩺 Administración</p>
+    <p class="subtitulo"><i class="fa-solid fa-user-plus"></i> Registro</p>
     <h1>Registrar Nuevo Médico</h1>
-    <p>Se creará un usuario de acceso y el perfil del médico en un solo paso.</p>
+    <p>Completa los datos de acceso y el perfil profesional del médico.</p>
   </div>
 
   <div class="card">
     <form method="POST" action="{{ url_for('admin.nuevo_medico') }}" novalidate>
 
-      <!-- Acceso -->
-      <div class="form-seccion-titulo">🔐 Credenciales de acceso</div>
-      <div class="form-grid">
-
-        <div class="form-group">
-          <label class="form-label" for="documento">
-            N° de Documento <span>*</span>
-          </label>
-          <input type="text" id="documento" name="documento"
-                 class="form-control" placeholder="Ej: 9876543210"
-                 value="{{ datos.get('documento','') }}"
-                 maxlength="15" data-solo-numeros required />
-          <span class="form-hint">Será el usuario de login del médico.</span>
-        </div>
-
-        <div class="form-group"><!-- espacio --></div>
-
-        <div class="form-group">
-          <label class="form-label" for="password">
-            Contraseña <span>*</span>
-          </label>
-          <div class="input-password-wrap">
-            <input type="password" id="password" name="password"
-                   class="form-control" placeholder="Mínimo 8 caracteres" required />
-            <button type="button" class="btn-toggle-pwd" tabindex="-1">👁</button>
-          </div>
-          <span class="form-hint">Mínimo 8 caracteres, 1 mayúscula y 1 número.</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="confirmar">
-            Confirmar contraseña <span>*</span>
-          </label>
-          <div class="input-password-wrap">
-            <input type="password" id="confirmar" name="confirmar"
-                   class="form-control" placeholder="Repite la contraseña" required />
-            <button type="button" class="btn-toggle-pwd" tabindex="-1">👁</button>
-          </div>
-        </div>
-
+      <div class="form-seccion-titulo">
+        <i class="fa-solid fa-lock"></i> Credenciales de acceso
       </div>
 
-      <!-- Perfil -->
-      <div class="form-seccion-titulo" style="margin-top:1.5rem;">👨‍⚕️ Datos del Médico</div>
       <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label" for="documento">Número de Documento <span>*</span></label>
+          <input type="text" id="documento" name="documento" class="form-control"
+                 placeholder="Ej: 2012345678" maxlength="15"
+                 value="{{ datos.get('documento','') }}" required />
+        </div>
 
         <div class="form-group">
+          <label class="form-label" for="password">Contraseña <span>*</span></label>
+          <div class="input-password-wrap">
+            <input type="password" id="password" name="password" class="form-control"
+                   placeholder="Mín. 8 caracteres, 1 mayúscula, 1 número" required />
+            <button type="button" class="btn-toggle-pwd" onclick="togglePwd('password', this)">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirmar">Confirmar Contraseña <span>*</span></label>
+          <div class="input-password-wrap">
+            <input type="password" id="confirmar" name="confirmar" class="form-control"
+                   placeholder="Repite la contraseña" required />
+            <button type="button" class="btn-toggle-pwd" onclick="togglePwd('confirmar', this)">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-seccion-titulo" style="margin-top:1.5rem;">
+        <i class="fa-solid fa-user-doctor"></i> Datos del Médico
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
           <label class="form-label" for="nombre">Nombres <span>*</span></label>
-          <input type="text" id="nombre" name="nombre"
-                 class="form-control" placeholder="Ej: Carlos"
-                 value="{{ datos.get('nombre','') }}"
-                 maxlength="80" data-capitalizar required />
+          <input type="text" id="nombre" name="nombre" class="form-control"
+                 placeholder="Ej: Carlos" value="{{ datos.get('nombre','') }}" required />
         </div>
 
         <div class="form-group">
           <label class="form-label" for="apellido">Apellidos <span>*</span></label>
-          <input type="text" id="apellido" name="apellido"
-                 class="form-control" placeholder="Ej: Ramírez Ospina"
-                 value="{{ datos.get('apellido','') }}"
-                 maxlength="80" data-capitalizar required />
+          <input type="text" id="apellido" name="apellido" class="form-control"
+                 placeholder="Ej: Pérez Martínez" value="{{ datos.get('apellido','') }}" required />
         </div>
 
         <div class="form-group">
           <label class="form-label" for="especialidad">Especialidad <span>*</span></label>
           <select id="especialidad" name="especialidad" class="form-control" required>
-            <option value="">— Selecciona —</option>
+            <option value="">-- Selecciona --</option>
             {% for esp in especialidades %}
               <option value="{{ esp }}"
                 {% if datos.get('especialidad') == esp %}selected{% endif %}>
-                {% if esp == 'General' %}🏥 General
-                {% elif esp == 'Odontología' %}🦷 Odontología
-                {% else %}👨‍⚕️ Especialista{% endif %}
+                {{ esp }}
               </option>
             {% endfor %}
           </select>
@@ -100,55 +88,47 @@
 
         <div class="form-group">
           <label class="form-label" for="telefono">Teléfono <span>*</span></label>
-          <input type="tel" id="telefono" name="telefono"
-                 class="form-control" placeholder="Ej: 3001234567"
-                 value="{{ datos.get('telefono','') }}"
-                 maxlength="20" data-solo-numeros required />
+          <input type="tel" id="telefono" name="telefono" class="form-control"
+                 placeholder="Ej: 3001234567" value="{{ datos.get('telefono','') }}" required />
         </div>
 
         <div class="form-group">
           <label class="form-label" for="correo">Correo <span>*</span></label>
-          <input type="email" id="correo" name="correo"
-                 class="form-control" placeholder="Ej: dr.ramirez@eps.com"
-                 value="{{ datos.get('correo','') }}"
-                 maxlength="100" required />
+          <input type="email" id="correo" name="correo" class="form-control"
+                 placeholder="Ej: medico@eps.com" value="{{ datos.get('correo','') }}" required />
         </div>
 
-        <div class="form-group">
+        <div class="form-group full">
           <label class="form-label" for="direccion_eps">Dirección EPS <span>*</span></label>
-          <input type="text" id="direccion_eps" name="direccion_eps"
-                 class="form-control" placeholder="Ej: Calle 45 # 12-30, Bogotá"
-                 value="{{ datos.get('direccion_eps','') }}"
-                 maxlength="150" required />
+          <input type="text" id="direccion_eps" name="direccion_eps" class="form-control"
+                 placeholder="Ej: Calle 45 # 12-30, Bogotá" maxlength="150"
+                 value="{{ datos.get('direccion_eps','') }}" required />
         </div>
-
       </div>
 
       <hr class="divider" />
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary btn-lg">
-          ✓ Registrar Médico
+          <i class="fa-solid fa-check"></i> Registrar Médico
         </button>
-        <a href="{{ url_for('admin.medicos') }}" class="btn btn-secondary">
-          Cancelar
-        </a>
+        <a href="{{ url_for('admin.medicos') }}" class="btn btn-secondary">Cancelar</a>
       </div>
 
     </form>
   </div>
-
 </div>
-{% endblock %}
 
 {% block scripts %}
 <script>
-  document.querySelectorAll(".btn-toggle-pwd").forEach(btn => {
-    btn.addEventListener("click", function () {
-      const input = this.previousElementSibling;
-      input.type  = input.type === "password" ? "text" : "password";
-      this.textContent = input.type === "password" ? "👁" : "🙈";
-    });
-  });
+function togglePwd(id, btn) {
+  const input = document.getElementById(id);
+  const isHidden = input.type === 'password';
+  input.type = isHidden ? 'text' : 'password';
+  btn.innerHTML = isHidden
+    ? '<i class="fa-regular fa-eye-slash"></i>'
+    : '<i class="fa-regular fa-eye"></i>';
+}
 </script>
+{% endblock %}
 {% endblock %}

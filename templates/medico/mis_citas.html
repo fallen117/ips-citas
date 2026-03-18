@@ -4,102 +4,92 @@
 
 {% block content %}
 <div class="main-container-wide">
-
   <nav class="breadcrumb">
-    <a href="{{ url_for('medico.dashboard') }}">Inicio</a>
+    <a href="{{ url_for('medico.dashboard') }}">Dashboard</a>
     <span class="sep">›</span>
     <span>Mis Citas</span>
   </nav>
 
   <div class="page-header">
-    <p class="subtitulo">🩺 Gestión de Citas</p>
+    <p class="subtitulo"><i class="fa-solid fa-calendar-check"></i> Gestión de Citas</p>
     <h1>Mis Citas</h1>
   </div>
 
   <!-- Filtros -->
-  <div class="card" style="margin-bottom:1.5rem;padding:1.25rem 1.5rem;">
-    <form method="GET" action="{{ url_for('medico.mis_citas') }}"
-          style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
-      <div class="form-group" style="flex:1;min-width:160px;">
-        <label class="form-label">Estado</label>
-        <select name="estado" class="form-control">
-          <option value="">Todos</option>
-          {% for e in estados %}
-            <option value="{{ e }}" {% if filtro_estado == e %}selected{% endif %}>
-              {{ e }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="form-group" style="flex:1;min-width:160px;">
-        <label class="form-label">Fecha</label>
-        <input type="date" name="fecha" class="form-control"
-               value="{{ filtro_fecha }}" />
-      </div>
-      <div style="display:flex;gap:.5rem;">
-        <button type="submit" class="btn btn-primary">Filtrar</button>
-        <a href="{{ url_for('medico.mis_citas') }}" class="btn btn-secondary">Limpiar</a>
-      </div>
-    </form>
-  </div>
+  <form method="GET" action="{{ url_for('medico.mis_citas') }}"
+        style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:flex-end;">
+    <div class="form-group" style="min-width:180px;">
+      <label class="form-label">Estado</label>
+      <select name="estado" class="form-control" onchange="this.form.submit()">
+        <option value="">Todos los estados</option>
+        {% for e in estados %}
+          <option value="{{ e }}" {% if filtro_estado == e %}selected{% endif %}>{{ e }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group" style="min-width:180px;">
+      <label class="form-label">Fecha</label>
+      <input type="date" name="fecha" class="form-control"
+             value="{{ filtro_fecha }}" onchange="this.form.submit()" />
+    </div>
+    {% if filtro_estado or filtro_fecha %}
+    <a href="{{ url_for('medico.mis_citas') }}" class="btn btn-secondary" style="align-self:flex-end;">
+      <i class="fa-solid fa-xmark"></i> Limpiar
+    </a>
+    {% endif %}
+  </form>
 
   {% if citas %}
-    <div class="tabla-wrapper">
-      <table class="tabla">
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Paciente</th>
-            <th>Documento</th>
-            <th>Tipo</th>
-            <th>Estado</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for cita in citas %}
-          <tr>
-            <td><strong>{{ cita.fecha | fecha_formato }}</strong></td>
-            <td>{{ cita.hora | hora_formato }}</td>
-            <td>{{ cita.paciente_nombre }}</td>
-            <td style="font-size:.84rem;color:var(--gris-500);">
-              {{ cita.paciente_documento }}
-            </td>
-            <td>
-              <span class="badge
-                {% if cita.tipo_cita == 'General' %}badge-general
-                {% elif cita.tipo_cita == 'Odontología' %}badge-odontologia
-                {% else %}badge-especialista{% endif %}">
-                {{ cita.tipo_cita }}
-              </span>
-            </td>
-            <td>
-              <span class="badge {{ cita.estado | estado_clase }}">
-                {{ cita.estado | estado_icono }} {{ cita.estado }}
-              </span>
-            </td>
-            <td>
-              <a href="{{ url_for('medico.detalle_cita', cita_id=cita.cita_id) }}"
-                 class="btn btn-outline btn-sm">Ver detalle</a>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <p style="margin-top:.75rem;font-size:.82rem;color:var(--gris-500);">
-      {{ citas | length }} cita{% if citas|length != 1 %}s{% endif %} encontrada{% if citas|length != 1 %}s{% endif %}
-    </p>
+  <div class="tabla-wrapper">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Paciente</th>
+          <th>EPS</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cita in citas %}
+        <tr>
+          <td><strong>{{ cita.fecha | fecha_formato }}</strong></td>
+          <td>{{ cita.hora | hora_formato }}</td>
+          <td>{{ cita.paciente_nombre }}</td>
+          <td style="font-size:.83rem;">{{ cita.paciente_eps }}</td>
+          <td>
+            <span class="badge
+              {% if cita.tipo_cita == 'General' %}badge-general
+              {% elif cita.tipo_cita == 'Odontología' %}badge-odontologia
+              {% else %}badge-especialista{% endif %}">
+              {{ cita.tipo_cita }}
+            </span>
+          </td>
+          <td>
+            <span class="badge {{ cita.estado | estado_clase }}">
+              {{ cita.estado | estado_icono }} {{ cita.estado }}
+            </span>
+          </td>
+          <td>
+            <a href="{{ url_for('medico.detalle_cita', cita_id=cita.cita_id) }}"
+               class="btn btn-outline btn-sm">
+              <i class="fa-solid fa-eye"></i> Ver
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% else %}
-    <div class="estado-vacio">
-      <div class="icono-grande">📭</div>
-      <h3>Sin citas para los filtros aplicados</h3>
-      <p>Prueba cambiando el estado o la fecha.</p>
-      <a href="{{ url_for('medico.mis_citas') }}" class="btn btn-secondary">
-        Ver todas las citas
-      </a>
-    </div>
+  <div class="estado-vacio">
+    <div class="icono-grande"><i class="fa-solid fa-inbox"></i></div>
+    <h3>No se encontraron citas</h3>
+    <p>Intenta cambiar los filtros de búsqueda.</p>
+  </div>
   {% endif %}
 
 </div>

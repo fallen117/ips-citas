@@ -1,11 +1,14 @@
 {% extends "base.html" %}
-
 {% block title %}Error {{ codigo }}{% endblock %}
 
 {% block content %}
 <div class="main-container" style="text-align:center;padding-top:4rem;">
-  <div style="font-size:5rem;margin-bottom:1rem;">
-    {% if codigo == 404 %}🔍{% else %}⚠️{% endif %}
+  <div style="font-size:4rem;color:var(--gris-300);margin-bottom:1rem;">
+    {% if codigo == 404 %}
+      <i class="fa-solid fa-magnifying-glass"></i>
+    {% else %}
+      <i class="fa-solid fa-triangle-exclamation"></i>
+    {% endif %}
   </div>
   <h1 style="font-size:4rem;color:var(--azul-claro);margin-bottom:.5rem;">{{ codigo }}</h1>
   <h2 style="margin-bottom:1rem;">{{ mensaje }}</h2>
@@ -17,7 +20,7 @@
     {% endif %}
   </p>
   <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
-    ← Volver al Inicio
+    <i class="fa-solid fa-arrow-left"></i> Volver al Inicio
   </a>
 </div>
 {% endblock %}

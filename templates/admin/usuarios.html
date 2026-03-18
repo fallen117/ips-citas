@@ -11,10 +11,31 @@
     <span>Usuarios</span>
   </nav>
 
-  <div class="page-header">
-    <p class="subtitulo">⚙ Administración</p>
-    <h1>Gestión de Usuarios</h1>
+  <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <div>
+      <p class="subtitulo"><i class="fa-solid fa-gear"></i> Administración</p>
+      <h1>Gestión de Usuarios</h1>
+    </div>
   </div>
+
+  <!-- Filtro por rol -->
+  <form method="GET" action="{{ url_for('admin.usuarios') }}"
+        style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:flex-end;">
+    <div class="form-group" style="min-width:180px;">
+      <label class="form-label">Filtrar por Rol</label>
+      <select name="rol" class="form-control" onchange="this.form.submit()">
+        <option value="">Todos los roles</option>
+        <option value="paciente" {% if rol_filtro == 'paciente' %}selected{% endif %}>Paciente</option>
+        <option value="medico"   {% if rol_filtro == 'medico'   %}selected{% endif %}>Médico</option>
+        <option value="admin"    {% if rol_filtro == 'admin'    %}selected{% endif %}>Admin</option>
+      </select>
+    </div>
+    {% if rol_filtro %}
+    <a href="{{ url_for('admin.usuarios') }}" class="btn btn-secondary" style="align-self:flex-end;">
+      <i class="fa-solid fa-xmark"></i> Limpiar
+    </a>
+    {% endif %}
+  </form>
 
   <div class="tabla-wrapper">
     <table class="tabla">
@@ -38,9 +59,13 @@
               {% if usr.rol == 'admin' %}badge-admin
               {% elif usr.rol == 'medico' %}badge-medico
               {% else %}badge-paciente{% endif %}">
-              {% if usr.rol == 'admin' %}⚙ Admin
-              {% elif usr.rol == 'medico' %}🩺 Médico
-              {% else %}👤 Paciente{% endif %}
+              {% if usr.rol == 'admin' %}
+                <i class="fa-solid fa-gear"></i> Admin
+              {% elif usr.rol == 'medico' %}
+                <i class="fa-solid fa-stethoscope"></i> Médico
+              {% else %}
+                <i class="fa-solid fa-user"></i> Paciente
+              {% endif %}
             </span>
           </td>
           <td style="font-size:.84rem;color:var(--gris-500);">
@@ -60,7 +85,11 @@
                   style="display:inline;">
               <button type="submit"
                       class="btn btn-sm {% if usr.activo %}btn-danger{% else %}btn-success{% endif %}">
-                {% if usr.activo %}Desactivar{% else %}Activar{% endif %}
+                {% if usr.activo %}
+                  <i class="fa-solid fa-ban"></i> Desactivar
+                {% else %}
+                  <i class="fa-solid fa-circle-check"></i> Activar
+                {% endif %}
               </button>
             </form>
             {% else %}
