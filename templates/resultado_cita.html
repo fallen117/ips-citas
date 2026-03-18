@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Mis Citas{% endblock %}
+{% block alertas_clase %}alertas-wide{% endblock %}
+
+{% block content %}
+<div class="main-container-wide">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Ruta de navegación">
+    <a href="{{ url_for('index') }}">Inicio</a>
+    <span class="sep">›</span>
+    <a href="{{ url_for('paciente.mis_citas') }}">Consultar Cita</a>
+    <span class="sep">›</span>
+    <span>Resultados</span>
+  </nav>
+
+  <!-- Datos del paciente -->
+  {% if paciente %}
+  <div class="paciente-card">
+    <div class="paciente-avatar">👤</div>
+    <div>
+      <h2>{{ paciente.nombre }} {{ paciente.apellido }}</h2>
+      <div class="paciente-meta">
+        <span>🪪 Doc: {{ paciente.documento }}</span>
+        <span>📱 {{ paciente.telefono }}</span>
+        <span>✉ {{ paciente.correo }}</span>
+        <span>🏥 {{ paciente.eps }}</span>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Cabecera de resultados -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.25rem;">
+    <div>
+      <p class="subtitulo" style="font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--azul-claro);margin-bottom:.25rem;">
+        Citas Médicas
+      </p>
+      <h2 style="font-size:1.3rem;">
+        {% if citas %}
+          {{ citas|length }} cita{% if citas|length != 1 %}s{% endif %} encontrada{% if citas|length != 1 %}s{% endif %}
+        {% else %}
+          Sin citas programadas
+        {% endif %}
+      </h2>
+    </div>
+    <a href="{{ url_for('paciente.reservar_cita') }}" class="btn btn-primary">
+      + Nueva Cita
+    </a>
+  </div>
+
+  <!-- Tabla de citas -->
+  {% if citas %}
+  <div class="tabla-wrapper">
+    <table class="tabla" aria-label="Tabla de citas médicas">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tipo de Cita</th>
+          <th>Médico</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Dirección EPS</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cita in citas %}
+        <tr>
+          <td style="font-weight:600;color:var(--azul-claro);">{{ loop.index }}</td>
+
+          <td>
+            <span class="badge
+              {% if cita.tipo_cita == 'General' %}badge-general
+              {% elif cita.tipo_cita == 'Odontología' %}badge-odontologia
+              {% else %}badge-especialista{% endif %}">
+              {% if cita.tipo_cita == 'General' %}🏥
+              {% elif cita.tipo_cita == 'Odontología' %}🦷
+              {% else %}👨‍⚕️{% endif %}
+              {{ cita.tipo_cita }}
+            </span>
+          </td>
+
+          <td style="font-weight:500;">{{ cita.medico }}</td>
+
+          <td>{{ cita.fecha | fecha_formato }}</td>
+
+          <td>{{ cita.hora | hora_formato }}</td>
+
+          <td style="font-size:.84rem;color:var(--gris-500);max-width:180px;">
+            📍 {{ cita.direccion_eps }}
+          </td>
+
+          <td>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+              <!-- Editar -->
+              <a href="{{ url_for('paciente.editar_cita', cita_id=cita.cita_id) }}"
+                 class="btn btn-outline btn-sm"
+                 title="Editar cita">
+                ✏ Editar
+              </a>
+              <!-- Cancelar -->
+              <form method="POST"
+                    action="{{ url_for('paciente.cancelar_cita', cita_id=cita.cita_id) }}"
+                    style="display:inline;">
+                <button type="submit"
+                        class="btn btn-danger btn-sm btn-cancelar-cita"
+                        title="Cancelar cita">
+                  🗑 Cancelar
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% else %}
+  <!-- Estado vacío -->
+  <div class="estado-vacio">
+    <div class="icono-grande">📭</div>
+    <h3>No hay citas programadas</h3>
+    <p>{{ mensaje or "No encontramos citas asociadas a ese documento." }}</p>
+    <a href="{{ url_for('paciente.reservar_cita') }}" class="btn btn-primary btn-lg">
+      📅 Reservar Primera Cita
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Volver -->
+  <div style="margin-top:1.75rem;">
+    <a href="{{ url_for('paciente.mis_citas') }}" class="btn btn-secondary">
+      ← Nueva Búsqueda
+    </a>
+  </div>
+
+</div>
+{% endblock %}

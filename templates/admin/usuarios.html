@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block alertas_clase %}alertas-wide{% endblock %}
+
+{% block content %}
+<div class="main-container-wide">
+
+  <nav class="breadcrumb">
+    <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+    <span class="sep">›</span>
+    <span>Usuarios</span>
+  </nav>
+
+  <div class="page-header">
+    <p class="subtitulo">⚙ Administración</p>
+    <h1>Gestión de Usuarios</h1>
+  </div>
+
+  <div class="tabla-wrapper">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Documento</th>
+          <th>Rol</th>
+          <th>Registrado</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for usr in usuarios %}
+        <tr>
+          <td><strong>{{ usr.nombre_completo }}</strong></td>
+          <td style="font-size:.85rem;color:var(--gris-500);">{{ usr.documento }}</td>
+          <td>
+            <span class="badge
+              {% if usr.rol == 'admin' %}badge-admin
+              {% elif usr.rol == 'medico' %}badge-medico
+              {% else %}badge-paciente{% endif %}">
+              {% if usr.rol == 'admin' %}⚙ Admin
+              {% elif usr.rol == 'medico' %}🩺 Médico
+              {% else %}👤 Paciente{% endif %}
+            </span>
+          </td>
+          <td style="font-size:.84rem;color:var(--gris-500);">
+            {{ usr.creado_en | fecha_formato }}
+          </td>
+          <td>
+            {% if usr.activo %}
+              <span class="badge badge-activo">Activo</span>
+            {% else %}
+              <span class="badge badge-inactivo">Inactivo</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if usr.rol != 'admin' %}
+            <form method="POST"
+                  action="{{ url_for('admin.toggle_usuario', usuario_id=usr.id) }}"
+                  style="display:inline;">
+              <button type="submit"
+                      class="btn btn-sm {% if usr.activo %}btn-danger{% else %}btn-success{% endif %}">
+                {% if usr.activo %}Desactivar{% else %}Activar{% endif %}
+              </button>
+            </form>
+            {% else %}
+              <span style="font-size:.8rem;color:var(--gris-500);">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p style="margin-top:.75rem;font-size:.82rem;color:var(--gris-500);">
+    {{ usuarios | length }} usuario{% if usuarios|length != 1 %}s{% endif %} en total
+  </p>
+
+</div>
+{% endblock %}

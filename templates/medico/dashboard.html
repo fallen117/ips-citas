@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Panel Médico{% endblock %}
+{% block alertas_clase %}alertas-wide{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+  <!-- Cabecera -->
+  <div class="dashboard-hero dashboard-hero--medico">
+    <div class="dashboard-hero-inner">
+      <div class="dashboard-hero-avatar">🩺</div>
+      <div>
+        <p class="dashboard-hero-subtitulo">Panel del Médico</p>
+        <h1 class="dashboard-hero-titulo">
+          Dr(a). {{ perfil.nombre }} {{ perfil.apellido }}
+        </h1>
+        <div class="dashboard-hero-meta">
+          <span>🏥 {{ perfil.especialidad }}</span>
+          <span>📍 {{ perfil.direccion_eps }}</span>
+          <span>📧 {{ perfil.correo }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-body">
+
+    <!-- Estadísticas -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-numero">{{ stats.pendientes or 0 }}</span>
+        <span class="stat-label">🕐 Pendientes</span>
+      </div>
+      <div class="stat-card stat-card--verde">
+        <span class="stat-numero">{{ stats.atendidas or 0 }}</span>
+        <span class="stat-label">✅ Atendidas</span>
+      </div>
+      <div class="stat-card stat-card--amarillo">
+        <span class="stat-numero">{{ stats.hoy or 0 }}</span>
+        <span class="stat-label">📅 Citas Hoy</span>
+      </div>
+      <div class="stat-card stat-card--azul">
+        <span class="stat-numero">{{ stats.total_citas or 0 }}</span>
+        <span class="stat-label">📊 Total</span>
+      </div>
+    </div>
+
+    <!-- Citas de hoy -->
+    <div class="dashboard-section">
+      <div class="dashboard-section-header">
+        <h2>Citas de Hoy</h2>
+        <a href="{{ url_for('medico.mis_citas') }}" class="btn btn-secondary btn-sm">
+          Ver todas →
+        </a>
+      </div>
+
+      {% if citas_hoy %}
+        <div class="citas-lista">
+          {% for cita in citas_hoy %}
+          <div class="cita-card">
+            <div class="cita-card-fecha">
+              <span class="cita-dia">Hoy</span>
+              <span class="cita-hora">{{ cita.hora | hora_formato }}</span>
+            </div>
+            <div class="cita-card-info">
+              <p class="cita-medico">{{ cita.paciente_nombre }}</p>
+              <p class="cita-tipo">{{ cita.tipo_cita }} · {{ cita.paciente_eps }}</p>
+              <p class="cita-dir">📱 {{ cita.paciente_telefono }}</p>
+            </div>
+            <div class="cita-card-acciones">
+              <span class="badge {{ cita.estado | estado_clase }}">
+                {{ cita.estado | estado_icono }} {{ cita.estado }}
+              </span>
+              <a href="{{ url_for('medico.detalle_cita', cita_id=cita.cita_id) }}"
+                 class="btn btn-outline btn-sm">Ver detalle</a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="estado-vacio" style="padding:2rem;">
+          <div class="icono-grande">🎉</div>
+          <h3>Sin citas programadas para hoy</h3>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Próximas citas -->
+    {% if proximas %}
+    <div class="dashboard-section">
+      <div class="dashboard-section-header">
+        <h2>Próximas Citas</h2>
+      </div>
+      <div class="tabla-wrapper">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Paciente</th>
+              <th>Tipo</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cita in proximas %}
+            <tr>
+              <td><strong>{{ cita.fecha | fecha_formato }}</strong></td>
+              <td>{{ cita.hora | hora_formato }}</td>
+              <td>{{ cita.paciente_nombre }}</td>
+              <td>{{ cita.tipo_cita }}</td>
+              <td>
+                <span class="badge {{ cita.estado | estado_clase }}">
+                  {{ cita.estado | estado_icono }} {{ cita.estado }}
+                </span>
+              </td>
+              <td>
+                <a href="{{ url_for('medico.detalle_cita', cita_id=cita.cita_id) }}"
+                   class="btn btn-outline btn-sm">Ver</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

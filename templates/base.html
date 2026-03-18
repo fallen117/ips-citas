@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EPS Citas — Sistema de gestión de citas médicas" />
+  <title>{% block title %}EPS Citas{% endblock %} | EPS Citas</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  {% block head %}{% endblock %}
+</head>
+<body class="rol-{{ usuario_sesion.rol if usuario_sesion else 'publico' }}">
+
+  <!-- ══════════════════════════════════════
+       NAVBAR
+       ══════════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="Navegación principal">
+
+    <!-- Marca / Logo -->
+    <a href="{{ url_for('index') }}" class="navbar-brand">
+      <div class="brand-icon">🏥</div>
+      EPS Citas
+    </a>
+
+    <!-- Botón hamburguesa (móvil) -->
+    <button class="navbar-toggle" id="navbar-toggle"
+            aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <!-- Links de navegación según rol -->
+    <ul class="navbar-nav" id="navbar-menu" role="list">
+
+      {% if not usuario_sesion %}
+        <!-- Sin sesión -->
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('auth.login') }}">Iniciar sesión</a></li>
+        <li>
+          <a href="{{ url_for('auth.registro') }}" class="navbar-cta">
+            Registrarme
+          </a>
+        </li>
+
+      {% elif usuario_sesion.rol == 'paciente' %}
+        <!-- Paciente -->
+        <li><a href="{{ url_for('paciente.dashboard') }}">Inicio</a></li>
+        <li><a href="{{ url_for('paciente.reservar_cita') }}">Reservar Cita</a></li>
+        <li><a href="{{ url_for('paciente.mis_citas') }}">Mis Citas</a></li>
+        <li><a href="{{ url_for('paciente.perfil') }}">Mi Perfil</a></li>
+        <!-- Móvil: cerrar sesión visible en el menú -->
+        <li class="navbar-sep"></li>
+        <li class="navbar-movil-only">
+          <a href="{{ url_for('auth.logout') }}" class="navbar-logout">
+            ↩ Cerrar sesión
+          </a>
+        </li>
+
+      {% elif usuario_sesion.rol == 'medico' %}
+        <!-- Médico -->
+        <li><a href="{{ url_for('medico.dashboard') }}">Inicio</a></li>
+        <li><a href="{{ url_for('medico.mis_citas') }}">Mis Citas</a></li>
+        <li><a href="{{ url_for('medico.perfil') }}">Mi Perfil</a></li>
+        <li class="navbar-sep"></li>
+        <li class="navbar-movil-only">
+          <a href="{{ url_for('auth.logout') }}" class="navbar-logout">
+            ↩ Cerrar sesión
+          </a>
+        </li>
+
+      {% elif usuario_sesion.rol == 'admin' %}
+        <!-- Administrador -->
+        <li><a href="{{ url_for('admin.dashboard') }}">Inicio</a></li>
+        <li><a href="{{ url_for('admin.usuarios') }}">Usuarios</a></li>
+        <li><a href="{{ url_for('admin.medicos') }}">Médicos</a></li>
+        <li class="navbar-sep"></li>
+        <li class="navbar-movil-only">
+          <a href="{{ url_for('auth.logout') }}" class="navbar-logout">
+            ↩ Cerrar sesión
+          </a>
+        </li>
+
+      {% endif %}
+    </ul>
+
+    <!-- Chip de usuario con dropdown (desktop) -->
+    {% if usuario_sesion %}
+    <div class="navbar-usuario" id="navbar-usuario-btn">
+      <span class="navbar-usuario-rol">
+        {% if usuario_sesion.rol == 'admin' %}⚙
+        {% elif usuario_sesion.rol == 'medico' %}🩺
+        {% else %}👤{% endif %}
+      </span>
+      <span class="navbar-usuario-nombre">{{ usuario_sesion.nombre }}</span>
+      <span class="navbar-usuario-chevron">▾</span>
+
+      <!-- Dropdown -->
+      <div class="navbar-dropdown" id="navbar-dropdown">
+        <a href="{{ url_for('index') }}" class="navbar-dropdown-item">
+          <span>🏠</span> Ir al inicio
+        </a>
+        <hr class="navbar-dropdown-sep" />
+        <a href="{{ url_for('auth.logout') }}" class="navbar-dropdown-item navbar-dropdown-logout">
+          <span>↩</span> Cerrar sesión
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
+  </nav>
+
+  <!-- ══════════════════════════════════════
+       MENSAJES FLASH
+       ══════════════════════════════════════ -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="{% block alertas_clase %}alertas{% endblock %}">
+        {% for categoria, mensaje in messages %}
+          <div class="alerta alerta-{{ categoria }}" role="alert">
+            <span>
+              {% if categoria == 'success' %}✓
+              {% elif categoria == 'error' %}⚠
+              {% elif categoria == 'info' %}ℹ
+              {% else %}•{% endif %}
+            </span>
+            {{ mensaje }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- ══════════════════════════════════════
+       CONTENIDO PRINCIPAL
+       ══════════════════════════════════════ -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════ -->
+  <footer class="footer">
+    <p>© 2024 EPS Citas — Sistema de Gestión de Citas Médicas &nbsp;·&nbsp; ADSO19 – SENA</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

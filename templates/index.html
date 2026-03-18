@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
+{% endblock %}
+
+{% block content %}
+
+<!-- ════════════════════════════════════════════
+     HERO — Layout centrado: texto arriba / panel blur abajo
+     ════════════════════════════════════════════ -->
+<section class="hero-split">
+
+  <!-- Orbes decorativos de fondo -->
+  <div class="hero-orbe hero-orbe--1"></div>
+  <div class="hero-orbe hero-orbe--2"></div>
+  <div class="hero-orbe hero-orbe--3"></div>
+
+  <div class="hero-split-inner">
+
+    <!-- Bloque superior: texto centrado -->
+    <div class="hero-texto">
+      <div class="hero-badge">
+        <span class="hero-badge-dot
+          {% if db_status %}hero-badge-dot--online{% else %}hero-badge-dot--offline{% endif %}">
+        </span>
+        Sistema {% if db_status %}en línea{% else %}sin conexión a BD{% endif %}
+      </div>
+
+      <h1>Tu salud,<br>bien organizada.</h1>
+
+      <p class="hero-descripcion">
+        Registra pacientes, agenda citas médicas y consulta
+        toda tu información de atención desde un solo lugar,
+        de forma rápida y segura.
+      </p>
+    </div>
+
+    <!-- Panel inferior: acceso rápido con glassmorphism -->
+    <div class="hero-card-accion">
+
+      <div class="hero-card-header">
+        <span class="hero-card-label">Acceso rápido</span>
+        <span class="hero-card-sub">¿Qué deseas hacer hoy?</span>
+      </div>
+
+      <div class="hero-card-links">
+
+        <a href="{{ url_for('auth.registro') }}" class="hero-quick-link">
+          <div class="hql-icono hql-icono--registrar">👤</div>
+          <div class="hql-texto">
+            <strong>Registrar Paciente</strong>
+            <span>Primera vez en el sistema</span>
+          </div>
+          <span class="hql-arrow">→</span>
+        </a>
+
+        <a href="{{ url_for('paciente.reservar_cita') }}" class="hero-quick-link">
+          <div class="hql-icono hql-icono--reservar">📅</div>
+          <div class="hql-texto">
+            <strong>Reservar Cita</strong>
+            <span>General, Odontología o Especialista</span>
+          </div>
+          <span class="hql-arrow">→</span>
+        </a>
+
+        <a href="{{ url_for('paciente.mis_citas') }}" class="hero-quick-link">
+          <div class="hql-icono hql-icono--consultar">🔍</div>
+          <div class="hql-texto">
+            <strong>Consultar Cita</strong>
+            <span>Busca por número de documento</span>
+          </div>
+          <span class="hql-arrow">→</span>
+        </a>
+
+      </div>
+
+      <p class="hero-card-nota">
+        ¿Primera vez aquí?
+        <a href="{{ url_for('auth.registro') }}" class="hero-card-link">Regístrate como paciente →</a>
+      </p>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     PASOS — Flujo numerado horizontal
+     ════════════════════════════════════════════ -->
+<section class="pasos-seccion">
+  <div class="pasos-inner">
+
+    <div class="pasos-header">
+      <p class="subtitulo-seccion">¿Cómo funciona?</p>
+      <h2>Agenda tu cita en 3 pasos</h2>
+    </div>
+
+    <div class="pasos-grid">
+
+      <div class="paso-item">
+        <div class="paso-numero">01</div>
+        <div class="paso-icono">👤</div>
+        <h3>Regístrate</h3>
+        <p>Completa tus datos personales y selecciona tu EPS para afiliarte al sistema.</p>
+        <a href="{{ url_for('auth.registro') }}" class="paso-link">Registrarme →</a>
+      </div>
+
+      <div class="paso-conector">
+        <div class="paso-linea"></div>
+        <span>›</span>
+        <div class="paso-linea"></div>
+      </div>
+
+      <div class="paso-item">
+        <div class="paso-numero">02</div>
+        <div class="paso-icono">📅</div>
+        <h3>Reserva tu cita</h3>
+        <p>Elige el médico, tipo de cita, fecha y hora que mejor se adapte a tu horario.</p>
+        <a href="{{ url_for('paciente.reservar_cita') }}" class="paso-link">Reservar →</a>
+      </div>
+
+      <div class="paso-conector">
+        <div class="paso-linea"></div>
+        <span>›</span>
+        <div class="paso-linea"></div>
+      </div>
+
+      <div class="paso-item">
+        <div class="paso-numero">03</div>
+        <div class="paso-icono">✅</div>
+        <h3>Consulta y gestiona</h3>
+        <p>Revisa, actualiza o cancela tus citas en cualquier momento con tu documento.</p>
+        <a href="{{ url_for('paciente.mis_citas') }}" class="paso-link">Consultar →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     TIPOS DE CITA — Fila minimalista con divisores
+     ════════════════════════════════════════════ -->
+<section class="tipos-seccion">
+  <div class="tipos-inner">
+
+    <div class="tipos-intro">
+      <div>
+        <p class="subtitulo-seccion">Servicios</p>
+        <h2>Tipos de cita disponibles</h2>
+      </div>
+      <a href="{{ url_for('paciente.reservar_cita') }}" class="btn btn-primary">
+        Reservar ahora →
+      </a>
+    </div>
+
+    <div class="tipos-lista">
+
+      <a href="{{ url_for('paciente.reservar_cita') }}" class="tipo-fila">
+        <div class="tipo-fila-izq">
+          <span class="tipo-fila-icono">🏥</span>
+          <div>
+            <p class="tipo-fila-nombre">Medicina General</p>
+            <p class="tipo-fila-desc">Atención primaria, diagnóstico y seguimiento</p>
+          </div>
+        </div>
+        <span class="tipo-fila-badge badge-general">General</span>
+        <span class="tipo-fila-arrow">→</span>
+      </a>
+
+      <a href="{{ url_for('paciente.reservar_cita') }}" class="tipo-fila">
+        <div class="tipo-fila-izq">
+          <span class="tipo-fila-icono">🦷</span>
+          <div>
+            <p class="tipo-fila-nombre">Odontología</p>
+            <p class="tipo-fila-desc">Limpiezas, revisiones y tratamientos dentales</p>
+          </div>
+        </div>
+        <span class="tipo-fila-badge badge-odontologia">Odontología</span>
+        <span class="tipo-fila-arrow">→</span>
+      </a>
+
+      <a href="{{ url_for('paciente.reservar_cita') }}" class="tipo-fila">
+        <div class="tipo-fila-izq">
+          <span class="tipo-fila-icono">👨‍⚕️</span>
+          <div>
+            <p class="tipo-fila-nombre">Especialista</p>
+            <p class="tipo-fila-desc">Cardiología, dermatología, pediatría y más</p>
+          </div>
+        </div>
+        <span class="tipo-fila-badge badge-especialista">Especialista</span>
+        <span class="tipo-fila-arrow">→</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

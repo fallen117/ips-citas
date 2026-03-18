@@ -1,0 +1,518 @@
+/* ════════════════════════════════════════════════
+   INDEX.CSS — Estilos exclusivos de la página de inicio
+   Cargado únicamente en index.html vía {% block head %}
+   ════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────────
+   HERO SPLIT — sección principal
+   ───────────────────────────────────────────────── */
+
+.hero-split {
+  background: linear-gradient(160deg, var(--azul-oscuro) 0%, #0f3460 45%, var(--azul-medio) 100%);
+  padding: 5rem 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-split::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.hero-split-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.75rem;
+}
+
+/* Orbes decorativos */
+.hero-orbe {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(72px);
+  opacity: .35;
+}
+
+.hero-orbe--1 {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, #2E86C1, transparent 70%);
+  top: -160px;
+  right: -80px;
+}
+
+.hero-orbe--2 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #1B4F8A, transparent 70%);
+  bottom: -60px;
+  left: -60px;
+}
+
+.hero-orbe--3 {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, #56aee2, transparent 70%);
+  top: 40%;
+  left: 20%;
+  opacity: .18;
+}
+
+/* Texto del hero */
+.hero-texto {
+  text-align: center;
+}
+
+.hero-texto h1 {
+  color: var(--blanco);
+  font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+  line-height: 1.1;
+}
+
+.hero-descripcion {
+  color: rgba(255, 255, 255, .72);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin: 1.25rem auto 0;
+  max-width: 520px;
+}
+
+/* Badge de estado */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .2);
+  color: var(--blanco);
+  font-size: .78rem;
+  font-weight: 500;
+  padding: .35rem 1rem;
+  border-radius: 50px;
+  margin-bottom: 1.4rem;
+  backdrop-filter: blur(8px);
+}
+
+.hero-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.hero-badge-dot--online {
+  background: #4ade80;
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, .25);
+}
+
+.hero-badge-dot--offline {
+  background: #f87171;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, .25);
+}
+
+/* Tarjeta glassmorphism */
+.hero-card-accion {
+  width: 100%;
+  max-width: 560px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .13) 0%,
+    rgba(46, 134, 193, .12) 50%,
+    rgba(11, 37, 69, .18) 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 24px;
+  padding: 2rem 2rem 1.5rem;
+  box-shadow:
+    0 8px 32px rgba(11, 37, 69, .35),
+    inset 0 1px 0 rgba(255, 255, 255, .15);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.hero-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+.hero-card-label {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: rgba(255, 255, 255, .9);
+}
+
+.hero-card-sub {
+  font-size: .8rem;
+  color: rgba(255, 255, 255, .55);
+  font-style: italic;
+}
+
+.hero-card-links {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-bottom: 1.25rem;
+}
+
+.hero-card-nota {
+  font-size: .78rem;
+  color: rgba(255, 255, 255, .5);
+  text-align: center;
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+}
+
+.hero-card-link {
+  color: rgba(255, 255, 255, .85);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transicion);
+}
+
+.hero-card-link:hover { color: var(--blanco); }
+
+/* Quick links dentro de la tarjeta */
+.hero-quick-link {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  padding: .85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  background: rgba(255, 255, 255, .07);
+  text-decoration: none;
+  transition: all var(--transicion);
+  color: var(--blanco);
+}
+
+.hero-quick-link:hover {
+  background: rgba(255, 255, 255, .16);
+  border-color: rgba(255, 255, 255, .32);
+  transform: translateX(4px);
+  color: var(--blanco);
+}
+
+.hql-icono {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.hql-icono--registrar { background: rgba(235, 244, 255, .2); }
+.hql-icono--reservar  { background: rgba(232, 245, 233, .2); }
+.hql-icono--consultar { background: rgba(255, 248, 225, .2); }
+
+.hql-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hql-texto strong {
+  font-size: .92rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, .95);
+}
+
+.hql-texto span {
+  font-size: .76rem;
+  color: rgba(255, 255, 255, .55);
+}
+
+.hql-arrow {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, .35);
+  transition: color var(--transicion), transform var(--transicion);
+}
+
+.hero-quick-link:hover .hql-arrow {
+  color: rgba(255, 255, 255, .9);
+  transform: translateX(4px);
+}
+
+
+/* ─────────────────────────────────────────────────
+   SECCIÓN PASOS — "Agenda tu cita en 3 pasos"
+   ───────────────────────────────────────────────── */
+
+.pasos-seccion {
+  background: var(--blanco);
+  padding: 4.5rem 2rem;
+  border-bottom: 1px solid var(--gris-200);
+}
+
+.pasos-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.pasos-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.pasos-header h2 {
+  color: var(--azul-oscuro);
+}
+
+.subtitulo-seccion {
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--azul-claro);
+  margin-bottom: .4rem;
+}
+
+.pasos-grid {
+  display: flex;
+  align-items: center;
+}
+
+.paso-item {
+  flex: 1;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-radius: var(--radio-lg);
+  transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+.paso-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-lg);
+  background: var(--gris-100);
+}
+
+.paso-numero {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--azul-suave);
+  line-height: 1;
+  margin-bottom: .5rem;
+  letter-spacing: -1px;
+}
+
+.paso-icono {
+  font-size: 2rem;
+  margin-bottom: .85rem;
+}
+
+.paso-item h3 {
+  font-size: 1rem;
+  margin-bottom: .5rem;
+  color: var(--azul-oscuro);
+}
+
+.paso-item p {
+  font-size: .85rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: var(--gris-500);
+}
+
+.paso-link {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--azul-claro);
+  border-bottom: 1.5px solid var(--azul-suave);
+  padding-bottom: 1px;
+  transition: color var(--transicion), border-color var(--transicion);
+}
+
+.paso-link:hover {
+  color: var(--azul-oscuro);
+  border-color: var(--azul-claro);
+}
+
+.paso-conector {
+  display: flex;
+  align-items: center;
+  color: var(--gris-300);
+  font-size: 1.5rem;
+  gap: 4px;
+  flex-shrink: 0;
+  padding: 0 .25rem;
+}
+
+.paso-linea {
+  width: 24px;
+  height: 1.5px;
+  background: var(--gris-200);
+}
+
+
+/* ─────────────────────────────────────────────────
+   SECCIÓN TIPOS DE CITA — Lista minimalista
+   ───────────────────────────────────────────────── */
+
+.tipos-seccion {
+  background: var(--blanco);
+  padding: 4rem 2rem 5rem;
+  border-top: 1px solid var(--gris-200);
+}
+
+.tipos-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* Encabezado split: título izq / botón der */
+.tipos-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.tipos-intro h2 {
+  color: var(--azul-oscuro);
+  margin-top: .25rem;
+}
+
+/* Contenedor de la lista */
+.tipos-lista {
+  border: 1px solid var(--gris-200);
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+}
+
+/* Cada fila de tipo */
+.tipo-fila {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  text-decoration: none;
+  color: var(--gris-700);
+  background: var(--blanco);
+  border-bottom: 1px solid var(--gris-200);
+  transition: background var(--transicion), padding-left var(--transicion);
+}
+
+.tipo-fila:last-child {
+  border-bottom: none;
+}
+
+.tipo-fila:hover {
+  background: var(--gris-100);
+  padding-left: 2rem;
+}
+
+/* Lado izquierdo: ícono + textos */
+.tipo-fila-izq {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.tipo-fila-icono {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  width: 44px;
+  text-align: center;
+}
+
+.tipo-fila-nombre {
+  font-size: .97rem;
+  font-weight: 600;
+  color: var(--azul-oscuro);
+  margin: 0 0 .15rem;
+}
+
+.tipo-fila-desc {
+  font-size: .82rem;
+  color: var(--gris-500);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge de tipo */
+.tipo-fila-badge {
+  display: inline-flex;
+  padding: .25rem .75rem;
+  border-radius: 50px;
+  font-size: .73rem;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Flecha */
+.tipo-fila-arrow {
+  font-size: .95rem;
+  color: var(--gris-300);
+  flex-shrink: 0;
+  transition: color var(--transicion), transform var(--transicion);
+}
+
+.tipo-fila:hover .tipo-fila-arrow {
+  color: var(--azul-claro);
+  transform: translateX(4px);
+}
+
+
+/* ─────────────────────────────────────────────────
+   RESPONSIVE
+   ───────────────────────────────────────────────── */
+
+@media (max-width: 860px) {
+  .pasos-grid {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .paso-conector {
+    transform: rotate(90deg);
+    padding: .25rem 0;
+  }
+
+  .tipos-intro {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero-split       { padding: 3rem 1.25rem 3rem; }
+  .hero-card-accion { border-radius: 18px; padding: 1.5rem 1.25rem 1.25rem; }
+  .pasos-seccion,
+  .tipos-seccion    { padding: 3rem 1.25rem; }
+  .tipo-fila        { padding: 1rem 1.1rem; }
+  .tipo-fila:hover  { padding-left: 1.4rem; }
+  .tipo-fila-desc   { display: none; }
+}

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Panel Admin{% endblock %}
+{% block alertas_clase %}alertas-wide{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+  <div class="dashboard-hero dashboard-hero--admin">
+    <div class="dashboard-hero-inner">
+      <div class="dashboard-hero-avatar">⚙️</div>
+      <div>
+        <p class="dashboard-hero-subtitulo">Panel de Administración</p>
+        <h1 class="dashboard-hero-titulo">Dashboard</h1>
+        <div class="dashboard-hero-meta">
+          <span>👤 {{ usuario_sesion.nombre }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-body">
+
+    <!-- Métricas -->
+    <div class="stats-grid stats-grid--6">
+      <div class="stat-card">
+        <span class="stat-numero">{{ metricas.total_pacientes or 0 }}</span>
+        <span class="stat-label">👤 Pacientes</span>
+      </div>
+      <div class="stat-card stat-card--azul">
+        <span class="stat-numero">{{ metricas.total_medicos or 0 }}</span>
+        <span class="stat-label">🩺 Médicos</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-numero">{{ metricas.citas_hoy or 0 }}</span>
+        <span class="stat-label">📅 Citas Hoy</span>
+      </div>
+      <div class="stat-card stat-card--amarillo">
+        <span class="stat-numero">{{ metricas.citas_pendientes or 0 }}</span>
+        <span class="stat-label">🕐 Pendientes</span>
+      </div>
+      <div class="stat-card stat-card--verde">
+        <span class="stat-numero">{{ metricas.citas_atendidas or 0 }}</span>
+        <span class="stat-label">✅ Atendidas</span>
+      </div>
+      <div class="stat-card stat-card--rojo">
+        <span class="stat-numero">{{ metricas.total_citas or 0 }}</span>
+        <span class="stat-label">📊 Total Citas</span>
+      </div>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="dashboard-acciones">
+      <a href="{{ url_for('admin.nuevo_medico') }}" class="dash-accion dash-accion--primary">
+        <span class="dash-accion-icono">🩺</span>
+        <div>
+          <strong>Nuevo Médico</strong>
+          <span>Registrar un médico</span>
+        </div>
+      </a>
+      <!-- <a href="{{ url_for('admin.medicos') }}" class="dash-accion">
+        <span class="dash-accion-icono">📋</span>
+        <div>
+          <strong>Gestionar Médicos</strong>
+          <span>Ver y editar médicos</span>
+        </div>
+      </a> -->
+      <a href="{{ url_for('admin.usuarios') }}" class="dash-accion">
+        <span class="dash-accion-icono">👥</span>
+        <div>
+          <strong>Gestionar Usuarios</strong>
+          <span>Ver todos los usuarios</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Médicos recientes -->
+    <div class="dashboard-section">
+      <div class="dashboard-section-header">
+        <h2>Médicos Registrados</h2>
+        <a href="{{ url_for('admin.medicos') }}" class="btn btn-secondary btn-sm">
+          Ver todos →
+        </a>
+      </div>
+      {% if medicos_recientes %}
+        <div class="tabla-wrapper">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Especialidad</th>
+                <th>Correo</th>
+                <th>Estado</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in medicos_recientes %}
+              <tr>
+                <td><strong>Dr(a). {{ m.nombre }} {{ m.apellido }}</strong></td>
+                <td>
+                  <span class="badge
+                    {% if m.especialidad == 'General' %}badge-general
+                    {% elif m.especialidad == 'Odontología' %}badge-odontologia
+                    {% else %}badge-especialista{% endif %}">
+                    {{ m.especialidad }}
+                  </span>
+                </td>
+                <td style="font-size:.84rem;">{{ m.correo }}</td>
+                <td>
+                  {% if m.activo %}
+                    <span class="badge badge-activo">Activo</span>
+                  {% else %}
+                    <span class="badge badge-inactivo">Inactivo</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{{ url_for('admin.editar_medico', medico_id=m.id) }}"
+                     class="btn btn-outline btn-sm">Editar</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="estado-vacio" style="padding:2rem;">
+          <p>No hay médicos registrados aún.</p>
+          <a href="{{ url_for('admin.nuevo_medico') }}" class="btn btn-primary btn-sm">
+            + Registrar primer médico
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

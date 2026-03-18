@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Médicos{% endblock %}
+{% block alertas_clase %}alertas-wide{% endblock %}
+
+{% block content %}
+<div class="main-container-wide">
+
+  <nav class="breadcrumb">
+    <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+    <span class="sep">›</span>
+    <span>Médicos</span>
+  </nav>
+
+  <div class="page-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <div>
+      <p class="subtitulo">🩺 Gestión</p>
+      <h1>Médicos</h1>
+    </div>
+    <a href="{{ url_for('admin.nuevo_medico') }}" class="btn btn-primary">
+      + Registrar Médico
+    </a>
+  </div>
+
+  {% if medicos %}
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Documento</th>
+            <th>Especialidad</th>
+            <th>Correo</th>
+            <th>Sede EPS</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in medicos %}
+          <tr>
+            <td><strong>Dr(a). {{ m.nombre }} {{ m.apellido }}</strong></td>
+            <td style="font-size:.84rem;color:var(--gris-500);">{{ m.documento }}</td>
+            <td>
+              <span class="badge
+                {% if m.especialidad == 'General' %}badge-general
+                {% elif m.especialidad == 'Odontología' %}badge-odontologia
+                {% else %}badge-especialista{% endif %}">
+                {{ m.especialidad }}
+              </span>
+            </td>
+            <td style="font-size:.84rem;">{{ m.correo }}</td>
+            <td style="font-size:.82rem;color:var(--gris-500);max-width:180px;">
+              📍 {{ m.direccion_eps }}
+            </td>
+            <td>
+              {% if m.activo %}
+                <span class="badge badge-activo">Activo</span>
+              {% else %}
+                <span class="badge badge-inactivo">Inactivo</span>
+              {% endif %}
+            </td>
+            <td>
+              <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+                <a href="{{ url_for('admin.editar_medico', medico_id=m.id) }}"
+                   class="btn btn-outline btn-sm">✏ Editar</a>
+                <form method="POST"
+                      action="{{ url_for('admin.toggle_medico', medico_id=m.id) }}"
+                      style="display:inline;">
+                  <button type="submit"
+                          class="btn btn-sm {% if m.activo %}btn-danger{% else %}btn-success{% endif %}">
+                    {% if m.activo %}Desactivar{% else %}Activar{% endif %}
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="estado-vacio">
+      <div class="icono-grande">🩺</div>
+      <h3>No hay médicos registrados</h3>
+      <p>Registra el primer médico del sistema.</p>
+      <a href="{{ url_for('admin.nuevo_medico') }}" class="btn btn-primary btn-lg">
+        + Registrar Médico
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

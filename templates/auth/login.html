@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <div class="auth-logo">🏥</div>
+      <h1 class="auth-titulo">Bienvenido</h1>
+      <p class="auth-subtitulo">Ingresa tus credenciales para continuar</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.login') }}" novalidate>
+
+      <div class="form-group">
+        <label class="form-label" for="documento">
+          Número de Documento <span>*</span>
+        </label>
+        <input type="text" id="documento" name="documento"
+               class="form-control" placeholder="Ej: 1012345678"
+               value="{{ documento }}" maxlength="15"
+               data-solo-numeros autocomplete="username" required />
+      </div>
+
+      <div class="form-group" style="margin-top:1rem;">
+        <label class="form-label" for="password">
+          Contraseña <span>*</span>
+        </label>
+        <div class="input-password-wrap">
+          <input type="password" id="password" name="password"
+                 class="form-control" placeholder="Tu contraseña"
+                 autocomplete="current-password" required />
+          <button type="button" class="btn-toggle-pwd" tabindex="-1"
+                  aria-label="Mostrar contraseña">👁</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg btn-block"
+              style="margin-top:1.5rem;">
+        Iniciar Sesión →
+      </button>
+
+    </form>
+
+    <div class="auth-footer">
+      <p>¿No tienes cuenta?
+        <a href="{{ url_for('auth.registro') }}">Regístrate como paciente</a>
+      </p>
+    </div>
+
+    <!-- Credenciales de prueba (quitar en producción) -->
+    <div class="auth-demo">
+      <p class="auth-demo-titulo">Credenciales de prueba</p>
+      <div class="auth-demo-grid">
+        <div class="auth-demo-item">
+          <span class="auth-demo-rol">👤 Paciente</span>
+          <code>1012345678 / Test1234*</code>
+        </div>
+        <div class="auth-demo-item">
+          <span class="auth-demo-rol">🩺 Médico</span>
+          <code>2000000001 / Test1234*</code>
+        </div>
+        <div class="auth-demo-item">
+          <span class="auth-demo-rol">⚙ Admin</span>
+          <code>0000000000 / Admin2024*</code>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Toggle mostrar/ocultar contraseña
+  document.querySelector(".btn-toggle-pwd")?.addEventListener("click", function () {
+    const input = document.getElementById("password");
+    input.type = input.type === "password" ? "text" : "password";
+    this.textContent = input.type === "password" ? "👁" : "🙈";
+  });
+</script>
+{% endblock %}

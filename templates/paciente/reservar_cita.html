@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block title %}{% if edicion %}Editar Cita{% else %}Reservar Cita{% endif %}{% endblock %}
+
+{% block content %}
+<div class="main-container">
+
+  <nav class="breadcrumb">
+    <a href="{{ url_for('paciente.dashboard') }}">Inicio</a>
+    <span class="sep">›</span>
+    <a href="{{ url_for('paciente.mis_citas') }}">Mis Citas</a>
+    <span class="sep">›</span>
+    <span>{% if edicion %}Editar Cita{% else %}Reservar Cita{% endif %}</span>
+  </nav>
+
+  <div class="page-header">
+    <p class="subtitulo">📅 {% if edicion %}Modificar{% else %}Nueva{% endif %} Cita</p>
+    <h1>{% if edicion %}Actualizar Cita Médica{% else %}Reservar Cita Médica{% endif %}</h1>
+    <p>{% if edicion %}Modifica los campos que deseas cambiar.
+       {% else %}Selecciona el médico, tipo, fecha y hora de tu cita.{% endif %}</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🩺 Datos de la Cita</div>
+
+    <form id="form-cita"
+          method="POST"
+          action="{% if edicion %}{{ url_for('paciente.editar_cita', cita_id=cita_id) }}{% else %}{{ url_for('paciente.reservar_cita') }}{% endif %}"
+          novalidate>
+
+      <div class="form-grid">
+
+        <!-- Tipo de cita -->
+        <div class="form-group">
+          <label class="form-label" for="tipo_cita">
+            Tipo de Cita <span>*</span>
+          </label>
+          <select id="tipo_cita" name="tipo_cita" class="form-control" required
+                  onchange="filtrarMedicos(this.value)">
+            <option value="">— Selecciona el tipo —</option>
+            {% for tipo in tipos_cita %}
+              <option value="{{ tipo }}"
+                {% if datos.get('tipo_cita') == tipo %}selected{% endif %}>
+                {% if tipo == 'General' %}🏥 General
+                {% elif tipo == 'Odontología' %}🦷 Odontología
+                {% else %}👨‍⚕️ Especialista{% endif %}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Médico -->
+        <div class="form-group">
+          <label class="form-label" for="medico_id">
+            Médico <span>*</span>
+          </label>
+          <select id="medico_id" name="medico_id" class="form-control" required>
+            <option value="">— Primero selecciona el tipo —</option>
+            {% for m in medicos %}
+              <option value="{{ m.id }}"
+                      data-especialidad="{{ m.especialidad }}"
+                      data-direccion="{{ m.direccion_eps }}"
+                {% if datos.get('medico_id')|string == m.id|string %}selected{% endif %}>
+                Dr(a). {{ m.nombre }} {{ m.apellido }} — {{ m.especialidad }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Fecha -->
+        <div class="form-group">
+          <label class="form-label" for="fecha">
+            Fecha <span>*</span>
+          </label>
+          <input type="date" id="fecha" name="fecha"
+                 class="form-control"
+                 value="{{ datos.get('fecha', '') }}"
+                 required />
+        </div>
+
+        <!-- Hora -->
+        <div class="form-group">
+          <label class="form-label" for="hora">
+            Hora <span>*</span>
+          </label>
+          <input type="time" id="hora" name="hora"
+                 class="form-control"
+                 value="{% if datos.get('hora') %}{{ datos.get('hora')|string|truncate(5,True,'') }}{% endif %}"
+                 min="07:00" max="18:00" required />
+          <span class="form-hint">Horario: 7:00 AM – 6:00 PM</span>
+        </div>
+
+        <!-- Dirección EPS (se autocompleta al elegir médico) -->
+        <div class="form-group full">
+          <label class="form-label" for="direccion_eps">
+            Dirección de la EPS <span>*</span>
+          </label>
+          <input type="text" id="direccion_eps" name="direccion_eps"
+                 class="form-control"
+                 placeholder="Se completa al elegir el médico"
+                 value="{{ datos.get('direccion_eps', '') }}"
+                 maxlength="150" required />
+          <span class="form-hint">Puedes editarla si es necesario.</span>
+        </div>
+
+      </div>
+
+      <hr class="divider" />
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-lg">
+          {% if edicion %}💾 Guardar Cambios{% else %}✓ Confirmar Reserva{% endif %}
+        </button>
+        <a href="{{ url_for('paciente.mis_citas') }}" class="btn btn-secondary">
+          Cancelar
+        </a>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Filtrar médicos según el tipo de cita seleccionado
+  function filtrarMedicos(tipo) {
+    const select  = document.getElementById("medico_id");
+    const options = select.querySelectorAll("option[data-especialidad]");
+    let   visible = 0;
+
+    options.forEach(opt => {
+      const match = !tipo || opt.dataset.especialidad === tipo;
+      opt.style.display = match ? "" : "none";
+      if (match) visible++;
+    });
+
+    // Resetear selección si el médico actual no coincide
+    const selected = select.options[select.selectedIndex];
+    if (selected && selected.dataset.especialidad &&
+        selected.dataset.especialidad !== tipo) {
+      select.value = "";
+      document.getElementById("direccion_eps").value = "";
+    }
+
+    // Actualizar placeholder
+    select.options[0].text = visible > 0
+      ? "— Selecciona un médico —"
+      : "— Sin médicos disponibles para este tipo —";
+  }
+
+  // Autocompletar dirección al elegir médico
+  document.getElementById("medico_id")?.addEventListener("change", function () {
+    const opt = this.options[this.selectedIndex];
+    const dir = opt?.dataset?.direccion || "";
+    document.getElementById("direccion_eps").value = dir;
+  });
+
+  // Al cargar: aplicar filtro si ya hay tipo seleccionado
+  const tipoInicial = document.getElementById("tipo_cita")?.value;
+  if (tipoInicial) filtrarMedicos(tipoInicial);
+</script>
+{% endblock %}

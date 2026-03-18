@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Crear Cuenta{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper auth-wrapper--wide">
+
+  <div class="auth-card auth-card--wide">
+    <div class="auth-card-header">
+      <div class="auth-logo">👤</div>
+      <h1 class="auth-titulo">Crear Cuenta</h1>
+      <p class="auth-subtitulo">Regístrate para gestionar tus citas médicas</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.registro') }}" novalidate>
+
+      <!-- Sección: Acceso -->
+      <div class="form-seccion-titulo">🔐 Datos de acceso</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label class="form-label" for="documento">
+            N° de Documento <span>*</span>
+          </label>
+          <input type="text" id="documento" name="documento"
+                 class="form-control" placeholder="Ej: 1012345678"
+                 value="{{ datos.get('documento','') }}"
+                 maxlength="15" data-solo-numeros required />
+          <span class="form-hint">Solo números — será tu usuario de acceso</span>
+        </div>
+
+        <div class="form-group"><!-- espacio --></div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">
+            Contraseña <span>*</span>
+          </label>
+          <div class="input-password-wrap">
+            <input type="password" id="password" name="password"
+                   class="form-control" placeholder="Mínimo 8 caracteres" required />
+            <button type="button" class="btn-toggle-pwd" tabindex="-1">👁</button>
+          </div>
+          <span class="form-hint">Mínimo 8 caracteres, 1 mayúscula y 1 número</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirmar">
+            Confirmar contraseña <span>*</span>
+          </label>
+          <div class="input-password-wrap">
+            <input type="password" id="confirmar" name="confirmar"
+                   class="form-control" placeholder="Repite la contraseña" required />
+            <button type="button" class="btn-toggle-pwd" tabindex="-1">👁</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sección: Perfil -->
+      <div class="form-seccion-titulo" style="margin-top:1.5rem;">👤 Información personal</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label class="form-label" for="nombre">Nombres <span>*</span></label>
+          <input type="text" id="nombre" name="nombre" class="form-control"
+                 placeholder="Ej: María José"
+                 value="{{ datos.get('nombre','') }}"
+                 maxlength="80" data-capitalizar required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="apellido">Apellidos <span>*</span></label>
+          <input type="text" id="apellido" name="apellido" class="form-control"
+                 placeholder="Ej: Rodríguez García"
+                 value="{{ datos.get('apellido','') }}"
+                 maxlength="80" data-capitalizar required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="telefono">Teléfono <span>*</span></label>
+          <input type="tel" id="telefono" name="telefono" class="form-control"
+                 placeholder="Ej: 3001234567"
+                 value="{{ datos.get('telefono','') }}"
+                 maxlength="20" data-solo-numeros required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="correo">Correo electrónico <span>*</span></label>
+          <input type="email" id="correo" name="correo" class="form-control"
+                 placeholder="Ej: maria@correo.com"
+                 value="{{ datos.get('correo','') }}"
+                 maxlength="100" required />
+        </div>
+
+        <div class="form-group full">
+          <label class="form-label" for="eps">EPS Asignada <span>*</span></label>
+          <select id="eps" name="eps" class="form-control" required>
+            <option value="">— Selecciona tu EPS —</option>
+            {% for eps_item in lista_eps %}
+              <option value="{{ eps_item }}"
+                {% if datos.get('eps') == eps_item %}selected{% endif %}>
+                {{ eps_item }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg btn-block"
+              style="margin-top:1.75rem;">
+        ✓ Crear mi cuenta
+      </button>
+
+    </form>
+
+    <div class="auth-footer">
+      <p>¿Ya tienes cuenta?
+        <a href="{{ url_for('auth.login') }}">Inicia sesión aquí</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll(".btn-toggle-pwd").forEach(btn => {
+    btn.addEventListener("click", function () {
+      const input = this.previousElementSibling;
+      input.type  = input.type === "password" ? "text" : "password";
+      this.textContent = input.type === "password" ? "👁" : "🙈";
+    });
+  });
+</script>
+{% endblock %}

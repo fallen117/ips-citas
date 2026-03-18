@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Mis Citas{% endblock %}
+{% block alertas_clase %}alertas-wide{% endblock %}
+
+{% block content %}
+<div class="main-container-wide">
+
+  <nav class="breadcrumb">
+    <a href="{{ url_for('paciente.dashboard') }}">Inicio</a>
+    <span class="sep">›</span>
+    <span>Mis Citas</span>
+  </nav>
+
+  <div class="page-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <div>
+      <p class="subtitulo">📋 Historial completo</p>
+      <h1>Mis Citas</h1>
+    </div>
+    <a href="{{ url_for('paciente.reservar_cita') }}" class="btn btn-primary">
+      + Reservar Nueva Cita
+    </a>
+  </div>
+
+  {% if citas %}
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Médico</th>
+            <th>Tipo</th>
+            <th>Dirección EPS</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cita in citas %}
+          <tr>
+            <td><strong>{{ cita.fecha | fecha_formato }}</strong></td>
+            <td>{{ cita.hora | hora_formato }}</td>
+            <td>{{ cita.medico_nombre }}</td>
+            <td>
+              <span class="badge
+                {% if cita.tipo_cita == 'General' %}badge-general
+                {% elif cita.tipo_cita == 'Odontología' %}badge-odontologia
+                {% else %}badge-especialista{% endif %}">
+                {{ cita.tipo_cita }}
+              </span>
+            </td>
+            <td style="font-size:.84rem;color:var(--gris-500);">
+              📍 {{ cita.direccion_eps }}
+            </td>
+            <td>
+              <span class="badge {{ cita.estado | estado_clase }}">
+                {{ cita.estado | estado_icono }} {{ cita.estado }}
+              </span>
+            </td>
+            <td>
+              {% if cita.estado == 'Pendiente' %}
+              <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+                <a href="{{ url_for('paciente.editar_cita', cita_id=cita.cita_id) }}"
+                   class="btn btn-outline btn-sm">✏ Editar</a>
+                <form method="POST"
+                      action="{{ url_for('paciente.cancelar_cita', cita_id=cita.cita_id) }}"
+                      style="display:inline;">
+                  <button type="submit" class="btn btn-danger btn-sm btn-cancelar-cita">
+                    🗑 Cancelar
+                  </button>
+                </form>
+              </div>
+              {% else %}
+              <span style="font-size:.8rem;color:var(--gris-500);">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="estado-vacio">
+      <div class="icono-grande">📭</div>
+      <h3>Aún no tienes citas</h3>
+      <p>Reserva tu primera cita médica ahora.</p>
+      <a href="{{ url_for('paciente.reservar_cita') }}" class="btn btn-primary btn-lg">
+        📅 Reservar Cita
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
