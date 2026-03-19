@@ -12,7 +12,7 @@ class Config:
     # También soportamos los nombres personalizados del .env local
     MYSQL_HOST     = (os.environ.get("MYSQLHOST")
                       or os.environ.get("MYSQL_HOST")
-                      or "localhost")
+                      or "mysql.railway.internal")
 
     MYSQL_USER     = (os.environ.get("MYSQLUSER")
                       or os.environ.get("MYSQL_USER")
@@ -20,7 +20,7 @@ class Config:
 
     MYSQL_PASSWORD = (os.environ.get("MYSQLPASSWORD")
                       or os.environ.get("MYSQL_PASSWORD")
-                      or "")
+                      or "xvsIblgsIxGeRunjtDlJyCFQQUVGVXVn")
 
     MYSQL_DB       = (os.environ.get("MYSQLDATABASE")
                       or os.environ.get("MYSQL_DATABASE")
