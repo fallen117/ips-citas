@@ -7,9 +7,9 @@
 
 /* ── Variables ─────────────────────────────────── */
 :root {
-  --azul-oscuro:   #0B2545;
-  --azul-medio:    #1B4F8A;
-  --azul-claro:    #2E86C1;
+  --azul-oscuro:   #0d3b2e;
+  --azul-medio:    #1A7A4A;
+  --azul-claro:    #34a06a;
   --azul-suave:    #D6E8F7;
   --verde-exito:   #1A7A4A;
   --verde-claro:   #D4EDDA;
@@ -19,7 +19,7 @@
   --gris-100:      #F8FAFB;
   --gris-200:      #EDF2F7;
   --gris-300:      #CBD5E0;
-  --gris-500:      #718096;
+  --gris-500:      #d8d8d8;
   --gris-700:      #2D3748;
   --blanco:        #FFFFFF;
   --sombra-sm:     0 1px 3px rgba(11,37,69,.08);
@@ -36,7 +36,7 @@
 html { scroll-behavior: smooth; font-size: 16px; }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+    font-family: "Noto Sans", sans-serif;
   font-weight: 400;
   color: var(--gris-700);
   background: var(--gris-100);
@@ -46,7 +46,7 @@ body {
 
 /* ── Tipografía ─────────────────────────────────── */
 h1, h2, h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: sans-serif;
   font-weight: 700;
   color: var(--azul-oscuro);
   line-height: 1.25;
@@ -76,7 +76,7 @@ a:hover { color: var(--azul-oscuro); }
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: 'Playfair Display', serif;
+  font-family: sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--blanco) !important;
@@ -279,7 +279,7 @@ a:hover { color: var(--azul-oscuro); }
   padding: 0.65rem 0.9rem;
   border: 1.5px solid var(--gris-300);
   border-radius: var(--radio);
-  font-family: 'DM Sans', sans-serif;
+  font-family: sans-serif;
   font-size: 0.93rem;
   color: var(--gris-700);
   background: var(--blanco);
@@ -315,7 +315,7 @@ select.form-control { cursor: pointer; appearance: none;
   gap: 8px;
   padding: 0.65rem 1.5rem;
   border-radius: var(--radio);
-  font-family: 'DM Sans', sans-serif;
+  font-family: sans-serif;
   font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
@@ -687,7 +687,7 @@ select.form-control { cursor: pointer; appearance: none;
 }
 
 .auth-titulo {
-  font-family: 'Playfair Display', serif;
+  font-family: sans-serif;
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -849,7 +849,7 @@ select.form-control { cursor: pointer; appearance: none;
   border-bottom-right-radius: 20px;
 }
 .dashboard-hero--admin {
-  background: linear-gradient(135deg, #2c0a3e 0%, #6A1B9A 100%);
+  background: linear-gradient(135deg, #3a5f54e0 0%, #044934 100%);
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
@@ -875,7 +875,7 @@ select.form-control { cursor: pointer; appearance: none;
 }
 
 .dashboard-hero-titulo {
-  font-family: 'Playfair Display', serif;
+  font-family: "Noto Sans", sans-serif;
   font-size: clamp(1.3rem, 3vw, 1.8rem);
   font-weight: 700;
   color: var(--blanco);
@@ -954,6 +954,10 @@ select.form-control { cursor: pointer; appearance: none;
   position: relative;
   overflow: hidden;
   transition: transform var(--transicion), box-shadow var(--transicion);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .stat-card:hover {
@@ -974,7 +978,7 @@ select.form-control { cursor: pointer; appearance: none;
 .stat-card--rojo::before    { background: var(--rojo-error); }
 
 .stat-numero {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   font-size: 2.2rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -1074,7 +1078,7 @@ select.form-control { cursor: pointer; appearance: none;
 }
 
 .cita-dia {
-  font-family: 'Playfair Display', serif;
+  font-family: "Noto Sans", sans-serif;
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--azul-oscuro);

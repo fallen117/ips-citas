@@ -1,52 +1,69 @@
-{% extends "base.html" %}
-{% block title %}Iniciar Sesión{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Iniciar Sesión{% endblock %} {% block
+content %}
 <div class="auth-wrapper">
   <div class="auth-card">
-
     <div class="auth-card-header">
       <div class="auth-logo"><i class="fa-solid fa-hospital"></i></div>
-      <h1 class="auth-titulo">EPS Citas</h1>
+      <h1 class="auth-titulo">Asosalud IPS</h1>
       <p class="auth-subtitulo">Ingresa con tu número de documento</p>
     </div>
 
     <form method="POST" action="{{ url_for('auth.login') }}" novalidate>
-
       <div class="form-group">
         <label class="form-label" for="documento">
           Número de Documento <span>*</span>
         </label>
-        <input type="text" id="documento" name="documento"
-               class="form-control" placeholder="Ej: 1012345678"
-               value="{{ documento }}" maxlength="15"
-               autocomplete="username" autofocus required />
+        <input
+          type="text"
+          id="documento"
+          name="documento"
+          class="form-control"
+          placeholder="Ej: 1012345678"
+          value="{{ documento }}"
+          maxlength="15"
+          autocomplete="username"
+          autofocus
+          required
+        />
       </div>
 
-      <div class="form-group" style="margin-top:.9rem;">
+      <div class="form-group" style="margin-top: 0.9rem">
         <label class="form-label" for="password">
           Contraseña <span>*</span>
         </label>
         <div class="input-password-wrap">
-          <input type="password" id="password" name="password"
-                 class="form-control" placeholder="Tu contraseña"
-                 autocomplete="current-password" required />
-          <button type="button" class="btn-toggle-pwd" aria-label="Mostrar contraseña"
-                  onclick="togglePwd('password', this)">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="Tu contraseña"
+            autocomplete="current-password"
+            required
+          />
+          <button
+            type="button"
+            class="btn-toggle-pwd"
+            aria-label="Mostrar contraseña"
+            onclick="togglePwd('password', this)"
+          >
             <i class="fa-regular fa-eye"></i>
           </button>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:1.25rem;">
+      <button
+        type="submit"
+        class="btn btn-primary btn-block btn-lg"
+        style="margin-top: 1.25rem"
+      >
         <i class="fa-solid fa-right-to-bracket"></i> Ingresar
       </button>
-
     </form>
 
     <hr class="divider" />
 
-    <p style="text-align:center;font-size:.88rem;color:var(--gris-500);">
+    <p style="text-align: center; font-size: 0.88rem; color: var(--gris-500)">
       ¿No tienes cuenta?
       <a href="{{ url_for('auth.registro') }}">Regístrate como paciente</a>
     </p>
@@ -61,7 +78,9 @@
           <p>Test1234*</p>
         </div>
         <div class="auth-demo-item">
-          <p class="auth-demo-rol"><i class="fa-solid fa-stethoscope"></i> Médico</p>
+          <p class="auth-demo-rol">
+            <i class="fa-solid fa-stethoscope"></i> Médico
+          </p>
           <p>2000000001</p>
           <p>Test1234*</p>
         </div>
@@ -72,20 +91,18 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 {% block scripts %}
 <script>
-function togglePwd(id, btn) {
-  const input = document.getElementById(id);
-  const isHidden = input.type === 'password';
-  input.type = isHidden ? 'text' : 'password';
-  btn.innerHTML = isHidden
-    ? '<i class="fa-regular fa-eye-slash"></i>'
-    : '<i class="fa-regular fa-eye"></i>';
-}
+  function togglePwd(id, btn) {
+    const input = document.getElementById(id);
+    const isHidden = input.type === "password";
+    input.type = isHidden ? "text" : "password";
+    btn.innerHTML = isHidden
+      ? '<i class="fa-regular fa-eye-slash"></i>'
+      : '<i class="fa-regular fa-eye"></i>';
+  }
 </script>
-{% endblock %}
-{% endblock %}
+{% endblock %} {% endblock %}

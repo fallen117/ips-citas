@@ -10,11 +10,11 @@ class Config:
     MYSQL_HOST     = os.environ.get("MYSQL_HOST", "localhost")
     MYSQL_USER     = os.environ.get("MYSQL_USER", "root")
     MYSQL_PASSWORD = os.environ.get("MYSQL_PASSWORD", "")
-    MYSQL_DB       = os.environ.get("MYSQL_DB", "eps_citas")
-    MYSQL_PORT     = int(os.environ.get("MYSQL_PORT", 3306))
+    MYSQL_DB       = os.environ.get("MYSQL_DB", "railway")
+    MYSQL_PORT     = int(os.environ.get("MYSQL_PORT", 3307))
 
     # ── Flask ─────────────────────────────────────────
-    SECRET_KEY  = os.environ.get("SECRET_KEY", "eps_citas_secret_key_dev")
+    SECRET_KEY  = os.environ.get("SECRET_KEY", "965620d4586d509143704365f11f1b2055f3a02a78d30311548595a62a13d936")
     DEBUG       = os.environ.get("FLASK_DEBUG", "True") == "True"
 
     # ── Sesión ────────────────────────────────────────

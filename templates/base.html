@@ -1,43 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}EPS Citas{% endblock %} | IPS Citas</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-  {% block head %}{% endblock %}
-</head>
-<body class="rol-{{ usuario_sesion.rol if usuario_sesion else 'publico' }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Asosalud IPS{% endblock %} | IPS Citas</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    {% block head %}{% endblock %}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="rol-{{ usuario_sesion.rol if usuario_sesion else 'publico' }}">
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+      <a href="{{ url_for('index') }}" class="navbar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-hospital"></i></div>
+        Asosalud IPS
+      </a>
 
-  <nav class="navbar" role="navigation" aria-label="Navegación principal">
+      <button
+        class="navbar-toggle"
+        id="navbar-toggle"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+      >
+        <i class="fa-solid fa-bars"></i>
+      </button>
 
-    <a href="{{ url_for('index') }}" class="navbar-brand">
-      <div class="brand-icon"><i class="fa-solid fa-hospital"></i></div>
-      IPS Citas
-    </a>
-
-    <button class="navbar-toggle" id="navbar-toggle"
-            aria-label="Abrir menú" aria-expanded="false">
-      <i class="fa-solid fa-bars"></i>
-    </button>
-
-    <ul class="navbar-nav" id="navbar-menu" role="list">
-
-      {% if not usuario_sesion %}
-        <li><a href="{{ url_for('index') }}"><i class="fa-solid fa-house"></i> Inicio</a></li>
-        <li><a href="{{ url_for('auth.login') }}"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a></li>
+      <ul class="navbar-nav" id="navbar-menu" role="list">
+        {% if not usuario_sesion %}
+        <li>
+          <a href="{{ url_for('index') }}"
+            ><i class="fa-solid fa-house"></i> Inicio</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('auth.login') }}"
+            ><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a
+          >
+        </li>
         <li>
           <a href="{{ url_for('auth.registro') }}" class="navbar-cta">
             <i class="fa-solid fa-user-plus"></i> Registrarme
           </a>
         </li>
 
-      {% elif usuario_sesion.rol == 'paciente' %}
-        <li><a href="{{ url_for('paciente.dashboard') }}"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
-        <li><a href="{{ url_for('paciente.reservar_cita') }}"><i class="fa-solid fa-calendar-plus"></i> Reservar Cita</a></li>
-        <li><a href="{{ url_for('paciente.mis_citas') }}"><i class="fa-solid fa-calendar-check"></i> Mis Citas</a></li>
-        <li><a href="{{ url_for('paciente.perfil') }}"><i class="fa-solid fa-user"></i> Mi Perfil</a></li>
+        {% elif usuario_sesion.rol == 'paciente' %}
+        <li>
+          <a href="{{ url_for('paciente.dashboard') }}"
+            ><i class="fa-solid fa-gauge"></i> Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('paciente.reservar_cita') }}"
+            ><i class="fa-solid fa-calendar-plus"></i> Reservar Cita</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('paciente.mis_citas') }}"
+            ><i class="fa-solid fa-calendar-check"></i> Mis Citas</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('paciente.perfil') }}"
+            ><i class="fa-solid fa-user"></i> Mi Perfil</a
+          >
+        </li>
         <li class="navbar-sep"></li>
         <li class="navbar-movil-only">
           <a href="{{ url_for('auth.logout') }}" class="navbar-logout">
@@ -45,10 +82,22 @@
           </a>
         </li>
 
-      {% elif usuario_sesion.rol == 'medico' %}
-        <li><a href="{{ url_for('medico.dashboard') }}"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
-        <li><a href="{{ url_for('medico.mis_citas') }}"><i class="fa-solid fa-calendar-check"></i> Mis Citas</a></li>
-        <li><a href="{{ url_for('medico.perfil') }}"><i class="fa-solid fa-user-doctor"></i> Mi Perfil</a></li>
+        {% elif usuario_sesion.rol == 'medico' %}
+        <li>
+          <a href="{{ url_for('medico.dashboard') }}"
+            ><i class="fa-solid fa-gauge"></i> Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('medico.mis_citas') }}"
+            ><i class="fa-solid fa-calendar-check"></i> Mis Citas</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('medico.perfil') }}"
+            ><i class="fa-solid fa-user-doctor"></i> Mi Perfil</a
+          >
+        </li>
         <li class="navbar-sep"></li>
         <li class="navbar-movil-only">
           <a href="{{ url_for('auth.logout') }}" class="navbar-logout">
@@ -56,10 +105,22 @@
           </a>
         </li>
 
-      {% elif usuario_sesion.rol == 'admin' %}
-        <li><a href="{{ url_for('admin.dashboard') }}"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
-        <li><a href="{{ url_for('admin.usuarios') }}"><i class="fa-solid fa-users"></i> Usuarios</a></li>
-        <li><a href="{{ url_for('admin.medicos') }}"><i class="fa-solid fa-user-doctor"></i> Médicos</a></li>
+        {% elif usuario_sesion.rol == 'admin' %}
+        <li>
+          <a href="{{ url_for('admin.dashboard') }}"
+            ><i class="fa-solid fa-gauge"></i> Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('admin.usuarios') }}"
+            ><i class="fa-solid fa-users"></i> Usuarios</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('admin.medicos') }}"
+            ><i class="fa-solid fa-user-doctor"></i> Médicos</a
+          >
+        </li>
         <li class="navbar-sep"></li>
         <li class="navbar-movil-only">
           <a href="{{ url_for('auth.logout') }}" class="navbar-logout">
@@ -67,58 +128,70 @@
           </a>
         </li>
 
+        {% endif %}
+      </ul>
+
+      {% if usuario_sesion %}
+      <div class="navbar-usuario" id="navbar-usuario-btn">
+        <span class="navbar-usuario-rol">
+          {% if usuario_sesion.rol == 'admin' %}<i class="fa-solid fa-gear"></i>
+          {% elif usuario_sesion.rol == 'medico' %}<i
+            class="fa-solid fa-stethoscope"
+          ></i>
+          {% else %}<i class="fa-solid fa-user"></i>{% endif %}
+        </span>
+        <span class="navbar-usuario-nombre">{{ usuario_sesion.nombre }}</span>
+        <span class="navbar-usuario-chevron"
+          ><i class="fa-solid fa-chevron-down"></i
+        ></span>
+
+        <div class="navbar-dropdown" id="navbar-dropdown">
+          <a href="{{ url_for('index') }}" class="navbar-dropdown-item">
+            <i class="fa-solid fa-house"></i> Ir al inicio
+          </a>
+          <hr class="navbar-dropdown-sep" />
+          <a
+            href="{{ url_for('auth.logout') }}"
+            class="navbar-dropdown-item navbar-dropdown-logout"
+          >
+            <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+          </a>
+        </div>
+      </div>
       {% endif %}
-    </ul>
+    </nav>
 
-    {% if usuario_sesion %}
-    <div class="navbar-usuario" id="navbar-usuario-btn">
-      <span class="navbar-usuario-rol">
-        {% if usuario_sesion.rol == 'admin' %}<i class="fa-solid fa-gear"></i>
-        {% elif usuario_sesion.rol == 'medico' %}<i class="fa-solid fa-stethoscope"></i>
-        {% else %}<i class="fa-solid fa-user"></i>{% endif %}
-      </span>
-      <span class="navbar-usuario-nombre">{{ usuario_sesion.nombre }}</span>
-      <span class="navbar-usuario-chevron"><i class="fa-solid fa-chevron-down"></i></span>
-
-      <div class="navbar-dropdown" id="navbar-dropdown">
-        <a href="{{ url_for('index') }}" class="navbar-dropdown-item">
-          <i class="fa-solid fa-house"></i> Ir al inicio
-        </a>
-        <hr class="navbar-dropdown-sep" />
-        <a href="{{ url_for('auth.logout') }}" class="navbar-dropdown-item navbar-dropdown-logout">
-          <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
-        </a>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="{% block alertas_clase %}alertas{% endblock %}">
+      {% for categoria, mensaje in messages %}
+      <div class="alerta alerta-{{ categoria }}" role="alert">
+        <span>
+          {% if categoria == 'success' %}<i
+            class="fa-solid fa-circle-check"
+          ></i>
+          {% elif categoria == 'error' %}<i
+            class="fa-solid fa-circle-exclamation"
+          ></i>
+          {% elif categoria == 'info' %}<i class="fa-solid fa-circle-info"></i>
+          {% else %}<i class="fa-solid fa-circle-dot"></i>{% endif %}
+        </span>
+        {{ mensaje }}
       </div>
+      {% endfor %}
     </div>
-    {% endif %}
+    {% endif %} {% endwith %}
 
-  </nav>
+    <main>{% block content %}{% endblock %}</main>
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="{% block alertas_clase %}alertas{% endblock %}">
-        {% for categoria, mensaje in messages %}
-          <div class="alerta alerta-{{ categoria }}" role="alert">
-            <span>
-              {% if categoria == 'success' %}<i class="fa-solid fa-circle-check"></i>
-              {% elif categoria == 'error' %}<i class="fa-solid fa-circle-exclamation"></i>
-              {% elif categoria == 'info' %}<i class="fa-solid fa-circle-info"></i>
-              {% else %}<i class="fa-solid fa-circle-dot"></i>{% endif %}
-            </span>
-            {{ mensaje }}
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-  {% endwith %}
+    <footer class="footer">
+      <p>
+        &copy; 2024 EPS Citas &mdash; Sistema de Gestión de Citas Médicas
+        &nbsp;&middot;&nbsp; ADSO19 &ndash; SENA
+      </p>
+    </footer>
 
-  <main>{% block content %}{% endblock %}</main>
-
-  <footer class="footer">
-    <p>&copy; 2024 EPS Citas &mdash; Sistema de Gestión de Citas Médicas &nbsp;&middot;&nbsp; ADSO19 &ndash; SENA</p>
-  </footer>
-
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-  {% block scripts %}{% endblock %}
-</body>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+  </body>
 </html>

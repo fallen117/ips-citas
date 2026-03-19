@@ -9,7 +9,7 @@
    ───────────────────────────────────────────────── */
 
 .hero-split {
-  background: linear-gradient(160deg, var(--azul-oscuro) 0%, #0f3460 45%, var(--azul-medio) 100%);
+  background: linear-gradient(160deg, var(--azul-oscuro) 0%, #023a1e 45%, var(--azul-medio) 100%);
   padding: 5rem 2rem 4rem;
   position: relative;
   overflow: hidden;
@@ -46,7 +46,7 @@
 .hero-orbe--1 {
   width: 420px;
   height: 420px;
-  background: radial-gradient(circle, #2E86C1, transparent 70%);
+  background: radial-gradient(circle, #1A7A4A, transparent 70%);
   top: -160px;
   right: -80px;
 }
@@ -54,7 +54,7 @@
 .hero-orbe--2 {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, #1B4F8A, transparent 70%);
+  background: radial-gradient(circle, #0d3b2e, transparent 70%);
   bottom: -60px;
   left: -60px;
 }
@@ -62,7 +62,7 @@
 .hero-orbe--3 {
   width: 200px;
   height: 200px;
-  background: radial-gradient(circle, #56aee2, transparent 70%);
+  background: radial-gradient(circle, #34a06a, transparent 70%);
   top: 40%;
   left: 20%;
   opacity: .18;
