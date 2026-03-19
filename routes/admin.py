@@ -15,22 +15,9 @@ admin = Blueprint("admin", __name__, url_prefix="/admin")
 def dashboard():
     u = get_usuario_sesion()
 
-    # Métricas generales desde la vista v_resumen_admin
-    conn = get_connection()
-    metricas = {}
-    if conn:
-        cursor = None
-        try:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("SELECT * FROM v_resumen_admin")
-            metricas = cursor.fetchone() or {}
-        except Exception as e:
-            print(f"[ERROR] admin.dashboard métricas: {e}")
-        finally:
-            from database import close_connection
-            close_connection(conn, cursor)
+    # Métricas calculadas con consultas directas (no depende de vista)
+    metricas = _obtener_metricas()
 
-    # Últimos médicos y usuarios registrados
     medicos_recientes  = Medico.obtener_todos()[:5]
     usuarios_recientes = Usuario.obtener_todos()[:8]
 
@@ -39,6 +26,45 @@ def dashboard():
                            metricas=metricas,
                            medicos_recientes=medicos_recientes,
                            usuarios_recientes=usuarios_recientes)
+
+
+def _obtener_metricas() -> dict:
+    """
+    Calcula las métricas del dashboard con consultas directas.
+    No depende de la vista v_resumen_admin.
+    """
+    conn = get_connection()
+    if not conn:
+        print("[ERROR] _obtener_metricas: no hay conexión a BD")
+        return {}
+    cursor = None
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT
+              (SELECT COUNT(*) FROM usuarios WHERE rol = 'paciente' AND activo = 1)
+                AS total_pacientes,
+              (SELECT COUNT(*) FROM usuarios WHERE rol = 'medico' AND activo = 1)
+                AS total_medicos,
+              (SELECT COUNT(*) FROM citas WHERE estado = 'Pendiente')
+                AS citas_pendientes,
+              (SELECT COUNT(*) FROM citas WHERE estado = 'Atendida')
+                AS citas_atendidas,
+              (SELECT COUNT(*) FROM citas WHERE estado = 'Cancelada')
+                AS citas_canceladas,
+              (SELECT COUNT(*) FROM citas WHERE fecha = CURDATE())
+                AS citas_hoy,
+              (SELECT COUNT(*) FROM citas)
+                AS total_citas
+        """)
+        resultado = cursor.fetchone()
+        print(f"[INFO] Métricas obtenidas: {resultado}")
+        return resultado or {}
+    except Exception as e:
+        print(f"[ERROR] _obtener_metricas: {e}")
+        return {}
+    finally:
+        close_connection(conn, cursor)
 
 
 # ══════════════════════════════════════════════
