@@ -32,7 +32,7 @@ class Config:
                          or 3306)
 
     # ── Flask ─────────────────────────────────────
-    SECRET_KEY = os.environ.get("SECRET_KEY", "cambia_esto_en_produccion")
+    SECRET_KEY = os.environ.get("SECRET_KEY", "53082cfd47760e8350c200b34253f530c8f944a8add321016147441da50f9662")
     DEBUG      = os.environ.get("FLASK_DEBUG", "False") == "True"
 
     # ── Sesión ────────────────────────────────────
