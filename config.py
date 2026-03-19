@@ -2,27 +2,43 @@ import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
+# Carga .env en desarrollo local; en Railway las vars ya están en el entorno
 load_dotenv()
 
 
 class Config:
-    # ── Base de datos MySQL ───────────────────────────
-    MYSQL_HOST     = os.environ.get("MYSQL_HOST", "localhost")
-    MYSQL_USER     = os.environ.get("MYSQL_USER", "root")
-    MYSQL_PASSWORD = os.environ.get("MYSQL_PASSWORD", "")
-    MYSQL_DB       = os.environ.get("MYSQL_DB", "railway")
-    MYSQL_PORT     = int(os.environ.get("MYSQL_PORT", 3307))
+    # ── Base de datos ─────────────────────────────
+    # Railway inyecta MYSQLHOST, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE, MYSQLPORT
+    # También soportamos los nombres personalizados del .env local
+    MYSQL_HOST     = (os.environ.get("MYSQLHOST")
+                      or os.environ.get("MYSQL_HOST")
+                      or "localhost")
 
-    # ── Flask ─────────────────────────────────────────
-    SECRET_KEY  = os.environ.get("SECRET_KEY", "965620d4586d509143704365f11f1b2055f3a02a78d30311548595a62a13d936")
-    DEBUG       = os.environ.get("FLASK_DEBUG", "True") == "True"
+    MYSQL_USER     = (os.environ.get("MYSQLUSER")
+                      or os.environ.get("MYSQL_USER")
+                      or "root")
 
-    # ── Sesión ────────────────────────────────────────
+    MYSQL_PASSWORD = (os.environ.get("MYSQLPASSWORD")
+                      or os.environ.get("MYSQL_PASSWORD")
+                      or "")
+
+    MYSQL_DB       = (os.environ.get("MYSQLDATABASE")
+                      or os.environ.get("MYSQL_DATABASE")
+                      or os.environ.get("MYSQL_DB")
+                      or "railway")
+
+    MYSQL_PORT     = int(os.environ.get("MYSQLPORT")
+                         or os.environ.get("MYSQL_PORT")
+                         or 3306)
+
+    # ── Flask ─────────────────────────────────────
+    SECRET_KEY = os.environ.get("SECRET_KEY", "cambia_esto_en_produccion")
+    DEBUG      = os.environ.get("FLASK_DEBUG", "False") == "True"
+
+    # ── Sesión ────────────────────────────────────
     SESSION_PERMANENT          = True
-    PERMANENT_SESSION_LIFETIME = timedelta(hours=8)   # sesión dura 8 horas
-    SESSION_COOKIE_HTTPONLY    = True                 # no accesible desde JS
-    SESSION_COOKIE_SAMESITE    = "Lax"
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=8)
 
-    # ── Aplicación ────────────────────────────────────
+    # ── App ───────────────────────────────────────
     APP_NAME    = "EPS Citas"
     APP_VERSION = "2.0.0"
