@@ -42,6 +42,8 @@ body {
   background: var(--gris-100);
   line-height: 1.65;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Tipografía ─────────────────────────────────── */
@@ -532,7 +534,7 @@ select.form-control { cursor: pointer; appearance: none;
   text-align: center;
   padding: 1.25rem;
   font-size: 0.82rem;
-  margin-top: auto;
+  margin-top: auto; /* Ahora esto sí tendrá efecto */
 }
 
 /* ── Breadcrumb ─────────────────────────────────── */
