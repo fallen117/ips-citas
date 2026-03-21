@@ -15,8 +15,8 @@ def dashboard():
     perfil = Paciente.obtener_por_id(u["perfil_id"])
     citas  = Cita.obtener_por_paciente(u["perfil_id"])
 
-    proximas  = [c for c in citas if c["estado"] == "Pendiente"]
-    historial = [c for c in citas if c["estado"] != "Pendiente"]
+    proximas  = [c for c in citas if c["estado"] == "Asignada"]
+    historial = [c for c in citas if c["estado"] != "Asig"]
 
     return render_template("paciente/dashboard.html",
                            usuario=u,
